@@ -18,9 +18,9 @@ import { site, url, quoteHref, serviceArea } from '../site.config';
 const ribbon = ['Less stress', 'More clarity', 'Calmer tax time', 'Know where you stand', 'Books you understand', 'Time back for your business'];
 
 const benefits = [
-  { icon: 'chart', title: 'Know where you stand', text: 'See what’s coming in, what’s going out, and what’s left, without guessing.' },
-  { icon: 'calendar', title: 'Calmer tax time', text: 'Your records are already organized, so there’s no last-minute scramble.' },
-  { icon: 'split', title: 'Business and personal, kept apart', text: 'A clean line between the two makes everything easier to follow.' },
+  { icon: 'trend', title: 'Know where you stand', text: 'See what’s coming in, what’s going out, and what’s left, without guessing.' },
+  { icon: 'taxcal', title: 'Calmer tax time', text: 'Your records are already organized, so there’s no last-minute scramble.' },
+  { icon: 'apart', title: 'Business and personal, kept apart', text: 'A clean line between the two makes everything easier to follow.' },
 ] as const;
 ---
 <Base
@@ -255,7 +255,17 @@ const benefits = [
     gap: 2rem;
   }
   @media (min-width: 48rem) { .benefits { grid-template-columns: repeat(3, 1fr); gap: 2.5rem; } }
-  .benefit .icon-bubble { margin-bottom: 1.25rem; }
+  .benefit .icon-bubble {
+    width: 4.5rem;
+    height: 4.5rem;
+    margin-bottom: 1.4rem;
+    background: var(--tb-navy);
+    color: var(--tb-cream);
+    box-shadow: 0 14px 26px -14px rgb(33 49 63 / 0.7);
+    transition: transform 0.5s var(--ease);
+  }
+  .benefit .icon-bubble :global(.icon) { width: 2.2rem; height: 2.2rem; stroke-width: 1.3; }
+  .benefit:hover .icon-bubble { transform: translateY(-3px) rotate(-4deg); }
   .benefit h3 { margin-bottom: 0.4rem; }
   .benefit p { color: var(--tb-slate); margin: 0; }
 

@@ -3,6 +3,10 @@
    Usage: <Icon name="receipt" /> (decorative; label nearby text instead). */
 interface Props { name: keyof typeof paths; class?: string }
 const paths = {
+  // Clearer, more literal icons for the three homepage benefits
+  trend: '<path d="M3.5 20.5h17"/><rect x="5" y="14.5" width="3" height="6" rx=".6"/><rect x="10.5" y="11.5" width="3" height="9" rx=".6"/><rect x="16" y="8" width="3" height="12.5" rx=".6"/><path d="m4.5 9.5 4.5-3.8 3.6 2.6L19 3.5"/><path d="M15.6 3.5H19v3.4"/>',
+  taxcal: '<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10.2h17"/><path d="m8.4 15.3 2.5 2.5 4.7-5"/>',
+  apart: '<rect x="2.5" y="10.5" width="8" height="8" rx="1.2"/><path d="M5 10.5V8.8a1 1 0 0 1 1-1h2.5a1 1 0 0 1 1 1v1.7M2.5 14.2h8"/><path d="M13.5 12.8 17.7 8.6l4.2 4.2"/><path d="M14.6 11.7v6.8h6.2v-6.8"/><path d="M12 4v16" stroke-dasharray="1.8 2.2"/>',
   receipt: '<path d="M6 3h12v18l-2-1.4L14 21l-2-1.4L10 21l-2-1.4L6 21z"/><path d="M9 8h6M9 11.5h6M9 15h3.5"/>',
   chart: '<path d="M4 20h16"/><path d="M7 16v-4M12 16V8M17 16v-6"/>',
   calendar: '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/><path d="m9.5 15 1.8 1.8L15 13"/>',
