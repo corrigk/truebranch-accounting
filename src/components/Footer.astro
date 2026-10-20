@@ -1,0 +1,139 @@
+---
+import Brand from './Brand.astro';
+import Icon from './Icon.astro';
+import { site, nav, quoteHref, url, serviceArea } from '../site.config';
+const year = new Date().getFullYear();
+---
+<footer class="site-footer on-dark">
+  <Brand name="branch" class="site-footer__branch site-footer__branch--a" />
+  <Brand name="branch" class="site-footer__branch site-footer__branch--b" />
+
+  <div class="wrap site-footer__grid">
+    <div class="site-footer__brand">
+      <Brand name="emblem" class="site-footer__emblem" label="TrueBranch Accounting emblem" />
+      <p class="site-footer__tag">Calm, clear bookkeeping for small business owners.</p>
+      <p class="site-footer__area"><Icon name="pin" /> <span>{serviceArea()}</span></p>
+    </div>
+
+    <nav aria-label="Footer">
+      <h2 class="site-footer__heading">Explore</h2>
+      <ul>
+        {nav.map((item) => <li><a href={url(item.href)}>{item.label}</a></li>)}
+        <li><a href={url(quoteHref)}>Get a quote</a></li>
+      </ul>
+    </nav>
+
+    <div>
+      <h2 class="site-footer__heading">Say hello</h2>
+      <ul>
+        <li><a class="site-footer__contact" href={`mailto:${site.email}`}><Icon name="mail" /> {site.email}</a></li>
+        {site.phone && <li><a href={`tel:${site.phone.replace(/[^\d+]/g, '')}`}>{site.phone}</a></li>}
+        {site.socials.map((s) => <li><a href={s.href} rel="noopener">{s.label}</a></li>)}
+      </ul>
+      <a class="btn btn--primary site-footer__cta" href={url(quoteHref)}>Get a quote <span class="arrow" aria-hidden="true">→</span></a>
+    </div>
+  </div>
+
+  <div class="wrap site-footer__legal">
+    <p>&copy; {year} {site.legalName}</p>
+    <a href="#main" class="site-footer__top">Back to top <span aria-hidden="true">↑</span></a>
+  </div>
+
+  <!-- Oversized wordmark, cropped by the bottom edge (as in the brand guidelines) -->
+  <div class="site-footer__wordmark" aria-hidden="true">
+    <Brand name="lockup1" />
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    position: relative;
+    overflow: hidden;
+    background: var(--tb-navy);
+    color: var(--tb-cream);
+    padding-top: clamp(4rem, 9vw, 6.5rem);
+    font-size: 0.98rem;
+  }
+  .site-footer :global(.site-footer__branch) {
+    position: absolute;
+    color: var(--tb-slate);
+    opacity: 0.22;
+    pointer-events: none;
+  }
+  .site-footer :global(.site-footer__branch--a) { width: 34rem; right: -8rem; top: -4rem; rotate: 12deg; }
+  .site-footer :global(.site-footer__branch--b) { width: 22rem; left: -7rem; top: 40%; rotate: 200deg; opacity: 0.12; }
+
+  .site-footer__grid {
+    position: relative;
+    display: grid;
+    gap: 3rem;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 46rem) {
+    .site-footer__grid { grid-template-columns: 1.6fr 1fr 1.3fr; }
+  }
+  .site-footer :global(.site-footer__emblem) { width: 4.5rem; color: var(--tb-cream); margin-bottom: 1.5rem; }
+  .site-footer__tag {
+    font-family: var(--font-heading);
+    font-size: clamp(1.6rem, 3vw, 2rem);
+    font-weight: 300;
+    line-height: 1.2;
+    max-width: 18ch;
+    margin-bottom: 1rem;
+  }
+  .site-footer__area { display: flex; gap: 0.5rem; color: var(--tb-mist); max-width: 34ch; }
+  .site-footer__area :global(.icon) { width: 1.2rem; margin-top: 0.2rem; }
+  .site-footer__heading {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--tb-mist);
+    margin-bottom: 1.1rem;
+  }
+  .site-footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.65rem; }
+  .site-footer a:not(.btn) {
+    color: var(--tb-cream);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    background: linear-gradient(currentColor, currentColor) 0 100% / 0% 1px no-repeat;
+    transition: background-size 0.4s var(--ease);
+  }
+  .site-footer a:not(.btn):hover { background-size: 100% 1px; }
+  .site-footer__contact { display: inline-flex; align-items: center; gap: 0.5rem; }
+  .site-footer__contact :global(.icon) { width: 1.15rem; color: var(--tb-mist); }
+  .site-footer__cta { margin-top: 1.75rem; }
+
+  .site-footer__legal {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 2rem;
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgb(156 165 176 / 0.25);
+    color: var(--tb-mist);
+    font-size: 0.85rem;
+  }
+  .site-footer__legal p { margin: 0; }
+  .site-footer .site-footer__top { color: var(--tb-mist); }
+
+  .site-footer__wordmark {
+    position: relative;
+    margin-top: 2.5rem;
+    height: clamp(4.5rem, 17vw, 15rem);
+    overflow: hidden;
+    color: var(--tb-slate);
+    opacity: 0.55;
+  }
+  .site-footer__wordmark :global(svg) {
+    width: min(118%, 110rem);
+    max-width: none;
+    margin-inline: auto;
+    position: relative;
+    left: 50%;
+    translate: -50% 0;
+  }
+</style>

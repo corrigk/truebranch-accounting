@@ -1,0 +1,181 @@
+---
+/* "Does this sound like you?" — a 30-second self-check.
+   Each statement ticked grows a leaf on the branch, and the message updates.
+   The "Get a quote" link carries the matching worries over to the quote
+   form so those boxes are pre-ticked. Nothing is stored or sent.
+   Wording is DRAFT. */
+import { url, quoteHref } from '../site.config';
+
+// `stress` matches a checkbox on the quote form (stress_expenses, etc.).
+const statements = [
+  { text: 'My receipts live in more than one place (or nowhere at all).', stress: 'expenses' },
+  { text: 'I’m not totally sure whether I made money last month.' },
+  { text: 'Tax season fills me with dread.', stress: 'taxes' },
+  { text: 'I sometimes pay for business things with my personal card.', stress: 'mixing' },
+  { text: 'I’ve been putting off looking at my numbers.' },
+  { text: 'I’d honestly rather spend my evenings on anything else.' },
+];
+// Leaf positions along the little branch: [x, y, rotation]
+const leaves: [number, number, number][] = [
+  [34, 30, -40], [58, 27, 35], [84, 23, -38], [110, 20, 32], [138, 16, -34], [166, 12, 28],
+];
+---
+<div class="check" data-selfcheck>
+  <div class="check__form">
+    <fieldset>
+      <legend class="visually-hidden">Tick any statements that sound like you</legend>
+      <ul class="check__list">
+        {statements.map((s, i) => (
+          <li>
+            <label class="check__item">
+              <input type="checkbox" name="s" value={i} data-stress={s.stress} />
+              <span class="check__box" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7" /></svg>
+              </span>
+              <span>{s.text}</span>
+            </label>
+          </li>
+        ))}
+      </ul>
+    </fieldset>
+  </div>
+
+  <div class="check__result">
+    <svg class="check__branch" viewBox="0 0 200 44" aria-hidden="true">
+      <path class="check__stem" d="M6 38 C 60 32, 120 24, 194 8" />
+      {leaves.map(([x, y, r], i) => (
+        <path
+          class="check__leaf"
+          data-leaf={i}
+          d="M0 0 C 6 -6.5, 19 -6.5, 26 0 C 19 6.5, 6 6.5, 0 0 Z"
+          transform={`translate(${x} ${y}) rotate(${r})`}
+        />
+      ))}
+    </svg>
+    <p class="check__count"><span data-count>0</span> of {statements.length}</p>
+    <p class="check__msg" aria-live="polite" data-msg>
+      Count how many sound like you. Two or more? Bookkeeping could take a real weight off your shoulders.
+    </p>
+    <a class="btn btn--primary check__cta" href={url(quoteHref)} data-cta>
+      Get a quote <span class="arrow" aria-hidden="true">→</span>
+    </a>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-selfcheck]').forEach((root) => {
+    const boxes = [...root.querySelectorAll<HTMLInputElement>('input[type=checkbox]')];
+    const leaves = [...root.querySelectorAll<SVGPathElement>('[data-leaf]')];
+    const countEl = root.querySelector<HTMLElement>('[data-count]')!;
+    const msg = root.querySelector<HTMLElement>('[data-msg]')!;
+    const cta = root.querySelector<HTMLAnchorElement>('[data-cta]')!;
+    const baseHref = cta.getAttribute('href')!;
+
+    const messages = (n: number) =>
+      n === 0 ? 'Tick any that sound like you. There are no wrong answers.'
+      : n === 1 ? 'Just one? You may be in better shape than you think. A quick chat can help you stay that way.'
+      : n <= 3 ? 'Sounds like bookkeeping could take a real weight off your shoulders.'
+      : 'You’re exactly the kind of person I love helping. Let’s get your books sorted.';
+
+    const update = () => {
+      const ticked = boxes.filter((b) => b.checked);
+      const n = ticked.length;
+      countEl.textContent = String(n);
+      leaves.forEach((leaf, i) => leaf.classList.toggle('is-on', i < n));
+      msg.textContent = messages(n);
+      root.dataset.level = n === 0 ? '0' : n <= 1 ? '1' : n <= 3 ? '2' : '3';
+      const stress = ticked.map((b) => b.dataset.stress).filter(Boolean);
+      cta.href = stress.length ? `${baseHref}?stress=${stress.join(',')}` : baseHref;
+    };
+    boxes.forEach((b) => b.addEventListener('change', update));
+    update();
+  });
+</script>
+
+<style>
+  .check {
+    display: grid;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: center;
+  }
+  @media (min-width: 56rem) { .check { grid-template-columns: 1.25fr 1fr; } }
+  .check fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+  .check__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
+  .check__item {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.9rem 1.1rem;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 1px 2px rgb(33 49 63 / 0.06);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: border-color 0.25s, transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  }
+  .check__item:hover { transform: translateX(4px); box-shadow: var(--shadow-soft); }
+  .check__item input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .check__box {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    border: 1.5px solid var(--tb-mist);
+    transition: background-color 0.25s, border-color 0.25s;
+  }
+  .check__box svg {
+    width: 1rem;
+    fill: none;
+    stroke: var(--tb-cream);
+    stroke-width: 2.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 24;
+    stroke-dashoffset: 24;
+    transition: stroke-dashoffset 0.35s var(--ease);
+  }
+  .check__item:has(input:checked) { border-color: var(--tb-olive); }
+  .check__item:has(input:checked) .check__box { background: var(--tb-olive); border-color: var(--tb-olive); }
+  .check__item:has(input:checked) .check__box svg { stroke-dashoffset: 0; }
+  .check__item:has(input:focus-visible) { outline: 3px solid var(--tb-olive); outline-offset: 2px; }
+
+  .check__result {
+    position: relative;
+    text-align: center;
+    padding: clamp(1.75rem, 4vw, 2.75rem);
+    border-radius: var(--radius-lg);
+    background: var(--tb-navy);
+    color: var(--tb-cream);
+    box-shadow: var(--shadow-lift);
+  }
+  .check__branch { width: min(100%, 17rem); margin: 0 auto 0.5rem; overflow: visible; }
+  .check__stem { fill: none; stroke: var(--tb-mist); stroke-width: 1.6; stroke-linecap: round; }
+  .check__leaf {
+    fill: var(--tb-mist);
+    opacity: 0.18;
+    transform-box: fill-box;
+    transform-origin: 0% 50%;
+    transition: opacity 0.5s var(--ease), fill 0.5s;
+  }
+  .check__leaf.is-on { opacity: 1; fill: #B9BE9A; animation: leaf-pop 0.6s var(--ease); }
+  @keyframes leaf-pop { 0% { scale: 0.3; } 60% { scale: 1.15; } 100% { scale: 1; } }
+  .check__count {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    color: var(--tb-mist);
+    margin: 0 auto 0.5rem;
+  }
+  .check__count span { font-size: 2.6rem; color: var(--tb-cream); font-weight: 300; margin-right: 0.15em; }
+  .check__msg {
+    font-family: var(--font-heading);
+    font-size: clamp(1.3rem, 2.4vw, 1.6rem);
+    line-height: 1.35;
+    margin: 0 auto 1.75rem;
+    max-width: 26ch;
+    min-height: 4.2em;
+  }
+  .check .check__cta { --btn-bg: var(--tb-cream); --btn-fg: var(--tb-navy); }
+  .check .check__cta:hover { --btn-bg: #fff; }
+</style>

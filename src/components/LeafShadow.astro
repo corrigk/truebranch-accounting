@@ -1,0 +1,41 @@
+---
+/* Dappled light: soft, blurred olive-branch shadows that sway slowly,
+   like sunlight through leaves (from the brand photography).
+   Purely decorative. Stops moving when reduced motion is preferred. */
+import Brand from './Brand.astro';
+interface Props { class?: string; tone?: 'light' | 'dark' }
+const { class: className = '', tone = 'light' } = Astro.props;
+---
+<div class={`leaf-shadow leaf-shadow--${tone} ${className}`} aria-hidden="true">
+  <div class="leaf-shadow__sprig leaf-shadow__sprig--a"><Brand name="branch" /></div>
+  <div class="leaf-shadow__sprig leaf-shadow__sprig--b"><Brand name="branch" /></div>
+  <div class="leaf-shadow__sprig leaf-shadow__sprig--c"><Brand name="branch" /></div>
+</div>
+
+<style>
+  .leaf-shadow {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .leaf-shadow__sprig {
+    position: absolute;
+    color: var(--tb-navy);
+    filter: blur(9px);
+    opacity: 0.09;
+    transform-origin: 0% 30%;
+    animation: sway 13s var(--ease-soft) infinite alternate;
+  }
+  .leaf-shadow--dark .leaf-shadow__sprig { color: #000; opacity: 0.22; }
+  .leaf-shadow__sprig :global(svg) { width: 100%; height: auto; }
+  .leaf-shadow__sprig--a { width: min(90vw, 60rem); right: -14%; top: -12%; rotate: 8deg; }
+  .leaf-shadow__sprig--b { width: min(70vw, 44rem); right: 8%; top: 32%; rotate: -24deg; animation-duration: 17s; animation-delay: -6s; filter: blur(14px); opacity: 0.06; }
+  .leaf-shadow__sprig--c { width: min(60vw, 36rem); left: -12%; bottom: -18%; rotate: 160deg; animation-duration: 15s; animation-delay: -3s; filter: blur(16px); opacity: 0.05; }
+  @keyframes sway {
+    0%   { transform: rotate(-1.5deg) translate3d(0, 0, 0); }
+    50%  { transform: rotate(1deg) translate3d(-8px, 6px, 0); }
+    100% { transform: rotate(2.5deg) translate3d(6px, -4px, 0); }
+  }
+</style>

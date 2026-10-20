@@ -1,0 +1,427 @@
+---
+/* WHY BOOKKEEPING — the heart of the site.
+   All copy is DRAFT. Scenarios are generic examples, not real clients.
+   Keep claims general: no specific tax or legal advice. */
+import Base from '../../layouts/Base.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import SelfCheck from '../../components/SelfCheck.astro';
+import Brand from '../../components/Brand.astro';
+import Icon from '../../components/Icon.astro';
+import { url, quoteHref } from '../../site.config';
+
+// "Without vs. with" comparison. Each pair lines up row by row.
+const comparison = [
+  { without: 'Receipts in a drawer, a bag, or your camera roll.', with: 'Every expense recorded and sorted in one place.' },
+  { without: 'Guessing whether you made money last month.', with: 'A clear monthly picture of what came in and what went out.' },
+  { without: 'A stressful scramble when tax time arrives.', with: 'Organized records ready to hand over.' },
+  { without: 'Business and personal spending tangled together.', with: 'A clean line between the two.' },
+  { without: 'That low-level worry you can’t quite put down.', with: 'Knowing where you stand, any time you ask.' },
+];
+
+// Relatable examples. Generic on purpose: not based on any real client.
+// `stress` pre-ticks the matching worry on the quote form.
+const scenarios = [
+  {
+    icon: 'calendar',
+    title: 'The tax-time scramble',
+    story: 'A freelance designer spends every spring digging through emails and bank apps, trying to piece together a year of expenses in a weekend.',
+    help: 'With books kept monthly, that year is already organized. Tax time becomes a handoff, not a hunt.',
+    stress: 'taxes',
+  },
+  {
+    icon: 'chart',
+    title: '“Am I actually making money?”',
+    story: 'A shop owner is busy all the time and money comes in every week, but at the end of the month it never seems to add up to much.',
+    help: 'Regular bookkeeping shows where the money really goes, so decisions are based on numbers, not hunches.',
+    stress: '',
+  },
+  {
+    icon: 'split',
+    title: 'One account for everything',
+    story: 'A new business owner pays for groceries and supplies from the same card, and can no longer tell which is which.',
+    help: 'A bookkeeper helps untangle the past and set up a simple way to keep things separate going forward.',
+    stress: 'mixing',
+  },
+  {
+    icon: 'box',
+    title: 'The “I’ll deal with it later” pile',
+    story: 'A consultant knows the books are behind. Every month it gets bigger, and harder to look at.',
+    help: 'Catching up once, then keeping up monthly, turns a dreaded pile into a quick, regular routine.',
+    stress: 'expenses',
+  },
+] as const;
+
+const faqs = [
+  {
+    q: 'Do I need a bookkeeper or an accountant?',
+    a: 'They do different jobs. A bookkeeper keeps your day-to-day financial records organized and up to date. An accountant usually works from those records on bigger-picture things like tax returns and planning. Many small businesses start with a bookkeeper, and tidy books make an accountant’s work easier too.',
+  },
+  {
+    q: 'I’m small. Is this really worth it?',
+    a: 'Small businesses often feel the benefit most, because the owner is doing everything. Bookkeeping takes one stressful job off your list and gives you a clear view of your money. On a quick call we can talk honestly about whether it makes sense for you.',
+  },
+  {
+    q: 'What do I need to give you?',
+    a: '[PLACEHOLDER: what Franccesca needs to get started, e.g. bank and card statements, access to any software you already use, and receipts.]',
+    placeholder: true,
+  },
+  {
+    q: 'My books are a mess. Is that a problem?',
+    a: 'Not at all. That’s exactly what I’m here for. No judgment, ever. We’ll start wherever you are.',
+  },
+  {
+    q: 'What does “reconcile” mean?',
+    a: 'It means checking that your records match your bank and card statements, line by line. It’s how you catch missing or doubled-up transactions.',
+  },
+];
+---
+<Base
+  title="Why bookkeeping"
+  description="What bookkeeping is, in plain language, and how it takes the stress out of running a small business."
+>
+  <PageIntro eyebrow="Why bookkeeping" title="Less worry about money starts with knowing <em>where it goes</em>.">
+    <p class="lede draft">
+      If your finances feel overwhelming, you’re in good company. Here’s what bookkeeping is,
+      in plain language, and why it helps.
+    </p>
+  </PageIntro>
+
+  <!-- ============ WHAT IS BOOKKEEPING ============ -->
+  <section class="section" aria-labelledby="what-title">
+    <div class="wrap what">
+      <div>
+        <p class="eyebrow" data-reveal>The simple version</p>
+        <h2 id="what-title" class="press" data-reveal style="--d:1">So what is bookkeeping, <em>really</em>?</h2>
+        <p class="lede draft" data-reveal style="--d:2">
+          Bookkeeping is keeping a clear, regular record of the money coming into your business
+          and the money going out.
+        </p>
+        <p class="draft" data-reveal style="--d:3">
+          That’s it. Every sale, every bill, every coffee with a client gets recorded and put in the
+          right place. Done monthly, it adds up to an honest, up-to-date picture of your business.
+        </p>
+        <p class="draft" data-reveal style="--d:4">
+          It isn’t about being “good with numbers”. It’s about having someone keep things in order,
+          so you can stop carrying it all around in your head.
+        </p>
+      </div>
+
+      <!-- Money in + money out → your books → clarity -->
+      <figure class="flow" data-reveal style="--d:2" aria-label="Money in and money out go into your books, which give you clarity.">
+        <div class="flow__sources">
+          <div class="flow__chip"><Icon name="wallet" /> Money in</div>
+          <div class="flow__chip"><Icon name="receipt" /> Money out</div>
+        </div>
+        <div class="flow__pipe" aria-hidden="true"><span></span></div>
+        <div class="flow__books">
+          <Brand name="emblem" class="flow__emblem" />
+          <span>Your books</span>
+          <small>Sorted &amp; checked every month</small>
+        </div>
+        <div class="flow__pipe" aria-hidden="true"><span></span></div>
+        <ul class="flow__out">
+          <li><Icon name="sun" /> Peace of mind</li>
+          <li><Icon name="chart" /> Clearer decisions</li>
+          <li><Icon name="calendar" /> Calmer tax time</li>
+        </ul>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ SELF-CHECK ============ -->
+  <section class="section section--paper" aria-labelledby="check-title">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">A 30-second check</p>
+        <h2 id="check-title" class="press">Does any of this sound <em>like you</em>?</h2>
+        <p class="lede">Tick whatever feels familiar. Nobody sees your answers but you.</p>
+      </div>
+      <div data-reveal style="--d:1"><SelfCheck /></div>
+    </div>
+  </section>
+
+  <!-- ============ WITHOUT vs WITH ============ -->
+  <section class="section" aria-labelledby="compare-title">
+    <div class="wrap">
+      <div class="section-head section-head--center" data-reveal>
+        <p class="eyebrow">The difference it makes</p>
+        <h2 id="compare-title" class="press">Without bookkeeping, <em>and with it</em></h2>
+      </div>
+
+      <div class="compare">
+        <div class="compare__col compare__col--without" data-reveal>
+          <h3>Without</h3>
+          <ul>{comparison.map((row) => <li class="draft">{row.without}</li>)}</ul>
+        </div>
+        <div class="compare__medallion" aria-hidden="true" data-reveal="scale" style="--d:2">
+          <Brand name="emblem" />
+        </div>
+        <div class="compare__col compare__col--with on-dark" data-reveal style="--d:1">
+          <h3>With</h3>
+          <ul>{comparison.map((row) => <li class="draft">{row.with}</li>)}</ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCENARIOS ============ -->
+  <section class="section section--paper" aria-labelledby="scenarios-title">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Sound familiar?</p>
+        <h2 id="scenarios-title" class="press">A few situations bookkeeping <em>helps with</em></h2>
+        <p class="muted">These are general examples, not real clients.</p>
+      </div>
+      <div class="scenarios">
+        {scenarios.map((s, i) => (
+          <article class="card card--lift scenario draft" data-reveal style={`--d:${i % 2}`}>
+            <span class="icon-bubble"><Icon name={s.icon} /></span>
+            <h3>{s.title}</h3>
+            <p class="scenario__story">{s.story}</p>
+            <p class="scenario__help"><Brand name="branch" class="scenario__sprig" /><span><strong>How bookkeeping helps:</strong> {s.help}</span></p>
+            <a class="text-link" href={url(s.stress ? `${quoteHref}?stress=${s.stress}` : quoteHref)}>This sounds like me</a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="section" aria-labelledby="faq-title">
+    <div class="wrap faq">
+      <div data-reveal>
+        <p class="eyebrow">Questions</p>
+        <h2 id="faq-title" class="press">Common <em>questions</em></h2>
+        <p class="muted">Something else on your mind? Ask it in the quote form. There’s a spot for it.</p>
+      </div>
+      <div class="faq__list" data-reveal style="--d:1">
+        {faqs.map((f, i) => (
+          <details name="faq" open={i === 0}>
+            <summary>{f.q}<span class="faq__icon" aria-hidden="true"></span></summary>
+            <div class="faq__answer"><p class={f.placeholder ? 'ph' : 'draft'}>{f.a}</p></div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand heading="Ready to take money worries <em>off your plate</em>?" />
+</Base>
+
+<style>
+  /* ---------- What is it + flow diagram ---------- */
+  .what { display: grid; gap: clamp(3rem, 6vw, 5rem); align-items: center; }
+  @media (min-width: 60rem) { .what { grid-template-columns: 1fr 1fr; } }
+
+  .flow {
+    margin: 0;
+    display: grid;
+    justify-items: center;
+    gap: 0;
+    padding: clamp(1.75rem, 4vw, 2.75rem);
+    border-radius: var(--radius-lg);
+    background: var(--tb-paper);
+    box-shadow: var(--shadow-soft);
+  }
+  .flow__sources { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
+  .flow__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.1rem;
+    border-radius: 999px;
+    background: #fff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    box-shadow: var(--shadow-soft);
+  }
+  .flow__chip :global(.icon) { width: 1.2rem; color: var(--tb-olive); }
+  .flow__pipe {
+    position: relative;
+    width: 2px;
+    height: 3.25rem;
+    background: repeating-linear-gradient(to bottom, var(--tb-mist) 0 6px, transparent 6px 12px);
+    overflow: hidden;
+  }
+  /* a little "packet" travelling down the pipe */
+  .flow__pipe span {
+    position: absolute;
+    left: -3px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--tb-olive);
+    animation: flow-drop 2.4s var(--ease-soft) infinite;
+  }
+  .flow__pipe + .flow__books + .flow__pipe span { animation-delay: 1.2s; }
+  @keyframes flow-drop { from { top: -10px; opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } to { top: 100%; opacity: 0; } }
+  .flow__books {
+    display: grid;
+    justify-items: center;
+    gap: 0.2rem;
+    padding: 1.4rem 2rem 1.2rem;
+    border-radius: 18px;
+    background: var(--tb-navy);
+    color: var(--tb-cream);
+    text-align: center;
+    box-shadow: var(--shadow-lift);
+  }
+  .flow__books :global(.flow__emblem) { width: 2.4rem; color: var(--tb-mist); margin-bottom: 0.5rem; }
+  .flow__books span { font-family: var(--font-heading); font-size: 1.6rem; line-height: 1; }
+  .flow__books small { color: var(--tb-mist); font-size: 0.82rem; }
+  .flow__out {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+  }
+  .flow__out li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 1rem;
+    border-radius: 999px;
+    border: 1px solid rgb(87 82 56 / 0.35);
+    color: var(--tb-olive);
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+  .flow__out :global(.icon) { width: 1.15rem; }
+
+  /* ---------- Comparison ---------- */
+  .compare { position: relative; display: grid; gap: 1.25rem; }
+  @media (min-width: 52rem) {
+    .compare { grid-template-columns: 1fr auto 1fr; gap: 0; align-items: stretch; }
+  }
+  .compare__col { padding: clamp(1.75rem, 3.5vw, 2.75rem); border-radius: var(--radius-lg); }
+  .compare__col h3 {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+  }
+  .compare__col ul { list-style: none; margin: 0; padding: 0; }
+  .compare__col li { position: relative; padding: 1rem 0 1rem 2.1rem; border-top: 1px solid; min-height: 4.4rem; }
+  .compare__col--without {
+    border: 1.5px dashed var(--tb-line);
+    color: var(--tb-slate);
+    background:
+      repeating-linear-gradient(-45deg, transparent 0 14px, rgb(156 165 176 / 0.07) 14px 15px);
+  }
+  .compare__col--without h3 { color: var(--tb-slate); }
+  .compare__col--without li { border-color: var(--tb-line); }
+  .compare__col--without li::before {
+    content: '';
+    position: absolute;
+    left: 0.1rem;
+    top: 1.1rem;
+    width: 1.2rem;
+    height: 1.2rem;
+    /* a little scribble */
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23586572' stroke-width='1.5' stroke-linecap='round'%3E%3Cpath d='M4 14c3-6 5 4 8-2s4 5 8-1M5 18c4-3 7 1 14-3'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+  .compare__col--with { background: var(--tb-navy); color: var(--tb-cream); box-shadow: var(--shadow-lift); }
+  .compare__col--with h3 { color: var(--tb-mist); }
+  .compare__col--with li { border-color: rgb(156 165 176 / 0.25); }
+  .compare__col--with li::before {
+    content: '';
+    position: absolute;
+    left: 0.15rem;
+    top: 1.05rem;
+    width: 1.3rem;
+    height: 1.3rem;
+    border-radius: 50%;
+    background: rgb(234 231 223 / 0.12) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23EAE7DF' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 12.5 4 4L18 8'/%3E%3C/svg%3E") center / 70% no-repeat;
+  }
+  .compare__medallion {
+    display: none;
+    place-self: center;
+    z-index: 2;
+    width: 4.5rem;
+    height: 4.5rem;
+    margin-inline: -2.25rem;
+    padding: 0.8rem;
+    border-radius: 50%;
+    background: var(--tb-cream);
+    color: var(--tb-olive);
+    box-shadow: var(--shadow-lift);
+  }
+  @media (min-width: 52rem) { .compare__medallion { display: grid; place-items: center; } }
+
+  /* ---------- Scenarios ---------- */
+  .scenarios { display: grid; gap: 1.5rem; }
+  @media (min-width: 48rem) { .scenarios { grid-template-columns: 1fr 1fr; } }
+  .scenario { display: flex; flex-direction: column; align-items: flex-start; }
+  .scenario .icon-bubble { margin-bottom: 1.25rem; }
+  .scenario__story { color: var(--tb-slate); }
+  .scenario__help {
+    display: flex;
+    gap: 0.9rem;
+    padding: 1.1rem 1.2rem;
+    border-radius: 14px;
+    background: var(--tb-cream);
+    margin-bottom: 1.5rem;
+    font-size: 0.98rem;
+  }
+  .scenario__help :global(.scenario__sprig) { width: 2.4rem; flex-shrink: 0; color: var(--tb-olive); opacity: 0.8; align-self: flex-start; margin-top: 0.2rem; }
+  .scenario .text-link { margin-top: auto; }
+
+  /* ---------- FAQ ---------- */
+  .faq { display: grid; gap: 2rem; }
+  @media (min-width: 56rem) { .faq { grid-template-columns: 1fr 1.6fr; gap: 5rem; } }
+  .faq__list { interpolate-size: allow-keywords; }
+  .faq__list details { border-top: 1px solid var(--tb-line); }
+  .faq__list details:last-child { border-bottom: 1px solid var(--tb-line); }
+  .faq__list summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 1.35rem 3rem 1.35rem 0;
+    position: relative;
+    font-family: var(--font-heading);
+    font-size: clamp(1.35rem, 2.4vw, 1.6rem);
+    font-weight: 500;
+    line-height: 1.3;
+    transition: color 0.25s;
+  }
+  .faq__list summary:hover { color: var(--tb-olive); }
+  .faq__list summary::-webkit-details-marker { display: none; }
+  .faq__icon {
+    position: absolute;
+    right: 0.25rem;
+    top: 50%;
+    width: 2rem;
+    height: 2rem;
+    margin-top: -1rem;
+    border-radius: 50%;
+    border: 1px solid var(--tb-line);
+    transition: transform 0.4s var(--ease), background-color 0.3s;
+  }
+  .faq__icon::before, .faq__icon::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0.75rem;
+    height: 1.5px;
+    background: var(--tb-olive);
+    translate: -50% -50%;
+  }
+  .faq__icon::after { rotate: 90deg; transition: rotate 0.4s var(--ease); }
+  details[open] .faq__icon { background: var(--tb-olive); transform: rotate(180deg); }
+  details[open] .faq__icon::before, details[open] .faq__icon::after { background: var(--tb-cream); }
+  details[open] .faq__icon::after { rotate: 0deg; }
+  .faq__answer p { padding-bottom: 1.5rem; margin: 0; color: var(--tb-slate); }
+  /* Smooth open/close where supported */
+  .faq__list details::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition: block-size 0.45s var(--ease), content-visibility 0.45s allow-discrete;
+  }
+  .faq__list details[open]::details-content { block-size: auto; }
+</style>

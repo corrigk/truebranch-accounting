@@ -1,0 +1,66 @@
+---
+/* Shows testimonials from src/data/testimonials.ts.
+   Placeholder entries only appear in draft mode. If nothing is left to
+   show, the whole section is left out of the page. */
+import { testimonials } from '../data/testimonials';
+import { site } from '../site.config';
+import Brand from './Brand.astro';
+
+const items = testimonials.filter((t) => !t.placeholder || site.showDraftMarkers);
+---
+{items.length > 0 && (
+  <section class="section testimonials" aria-labelledby="testimonials-title">
+    <div class="wrap">
+      <div class="section-head section-head--center" data-reveal>
+        <p class="eyebrow">Kind words</p>
+        <h2 id="testimonials-title" class="press">What clients <em>say</em></h2>
+      </div>
+      <div class="testimonials__grid">
+        {items.map((t, i) => (
+          <figure class={`card testimonial ${t.placeholder ? 'draft' : ''}`} data-reveal style={`--d:${i}`}>
+            <span class="testimonial__mark" aria-hidden="true">“</span>
+            <blockquote><p>{t.quote}</p></blockquote>
+            <figcaption>
+              <Brand name="branch" class="testimonial__sprig" />
+              <span>
+                {t.showName !== false && t.name && <span class="testimonial__name">{t.name}</span>}
+                <span class="testimonial__biz">{t.businessType}</span>
+              </span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .testimonials__grid { display: grid; gap: 1.5rem; }
+  @media (min-width: 46rem) {
+    .testimonials__grid { grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); }
+  }
+  .testimonial { margin: 0; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }
+  .testimonial__mark {
+    position: absolute;
+    top: -1.5rem;
+    right: 1.25rem;
+    font-family: var(--font-heading);
+    font-size: 9rem;
+    line-height: 1;
+    color: var(--tb-olive);
+    opacity: 0.12;
+  }
+  .testimonial blockquote { margin: 0 0 1.75rem; }
+  .testimonial blockquote p {
+    font-family: var(--font-heading);
+    font-size: clamp(1.35rem, 2.4vw, 1.6rem);
+    line-height: 1.4;
+    font-style: italic;
+    margin: 0;
+  }
+  .testimonial figcaption { display: flex; align-items: center; gap: 0.9rem; font-size: 0.95rem; }
+  .testimonial figcaption > span { display: flex; flex-direction: column; }
+  .testimonial :global(.testimonial__sprig) { width: 3rem; color: var(--tb-olive); opacity: 0.7; }
+  .testimonial__name { font-weight: 600; }
+  .testimonial__biz { color: var(--tb-slate); }
+</style>

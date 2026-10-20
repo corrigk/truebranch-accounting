@@ -1,0 +1,35 @@
+---
+/* Heading block at the top of inner pages, bathed in soft leaf-light.
+   Put an <em> around a word in the title for the italic olive accent. */
+import LeafShadow from './LeafShadow.astro';
+interface Props { eyebrow: string; title: string; draftTitle?: boolean }
+const { eyebrow, title, draftTitle = true } = Astro.props;
+---
+<section class="page-intro" aria-labelledby="page-title">
+  <div class="page-intro__light" aria-hidden="true"></div>
+  <LeafShadow />
+  <div class="wrap page-intro__inner">
+    <p class="eyebrow" data-reveal>{eyebrow}</p>
+    <h1 id="page-title" class:list={['press', { draft: draftTitle }]} data-reveal style="--d:1" set:html={title} />
+    <div class="page-intro__body" data-reveal style="--d:2"><slot /></div>
+  </div>
+</section>
+
+<style>
+  .page-intro {
+    position: relative;
+    overflow: hidden;
+    margin-top: calc(var(--header-h) * -1);
+    padding-block: calc(var(--header-h) + clamp(3rem, 9vw, 6.5rem)) clamp(3rem, 7vw, 5rem);
+  }
+  .page-intro__light {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(60rem 30rem at 85% 0%, var(--tb-sun), transparent 65%),
+      radial-gradient(40rem 22rem at 0% 100%, rgb(156 165 176 / 0.18), transparent 70%);
+  }
+  .page-intro__inner { position: relative; z-index: 1; }
+  .page-intro h1 { max-width: 15ch; }
+  .page-intro__body :global(.lede) { max-width: 50ch; }
+</style>

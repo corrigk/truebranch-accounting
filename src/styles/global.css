@@ -1,0 +1,335 @@
+/* =====================================================================
+   TrueBranch Accounting — global styles
+   Mood: calm, earthy, trustworthy. Paper, letterpress, soft natural light.
+   ===================================================================== */
+
+:root {
+  /* Brand palette (from the brand guidelines) */
+  --tb-navy:   #21313F; /* deep navy, primary dark */
+  --tb-slate:  #586572; /* slate blue */
+  --tb-forest: #383A28; /* dark olive-green */
+  --tb-cream:  #EAE7DF; /* cream, main light background */
+  --tb-olive:  #575238; /* olive-brown */
+  --tb-mist:   #9CA5B0; /* dusty blue-grey */
+
+  /* Contrast notes (checked against WCAG AA):
+     navy on cream 11.6:1, slate on cream 4.8:1 (OK for body text),
+     olive on cream 6.4:1, cream on forest 9.4:1, mist on navy 5.3:1.
+     mist on cream is only ~2:1, so use it for borders and decoration only. */
+
+  /* Derived tones */
+  --tb-paper:  #F4F2EC; /* lighter cream for cards */
+  --tb-sun:    #FBF6EA; /* warm highlight, used for "light" glows */
+  --tb-line:   #C9CBC8; /* mist blended into cream, for borders */
+  --tb-shade:  33 49 63; /* navy as RGB channels, for shadows */
+
+  /* FONTS — stand-ins for the brand fonts.
+     If Franccesca licenses the real fonts, add @font-face rules and put
+     their names first in these two lines. */
+  --font-heading: 'Cormorant Garamond', 'Corporate A Condensed', Georgia, serif;
+  --font-body: 'Source Sans 3 Variable', 'Source Sans 3', 'Tamil Sangam MN', system-ui, sans-serif;
+
+  --measure: 62ch;
+  --wrap: 76rem;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --radius: 10px;
+  --radius-lg: 22px;
+  --space-section: clamp(4.5rem, 11vw, 8.5rem);
+  --header-h: 4.75rem;
+
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-soft: cubic-bezier(0.45, 0, 0.2, 1);
+
+  --shadow-soft:
+    0 1px 1px rgb(var(--tb-shade) / 0.04),
+    0 6px 18px -6px rgb(var(--tb-shade) / 0.12);
+  --shadow-lift:
+    0 2px 2px rgb(var(--tb-shade) / 0.04),
+    0 22px 48px -18px rgb(var(--tb-shade) / 0.28);
+}
+
+/* ---------- Reset-ish ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--header-h) + 1.5rem);
+}
+body {
+  margin: 0;
+  background-color: var(--tb-cream);
+  color: var(--tb-navy);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+/* Paper grain over everything: very faint, purely decorative. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0.32;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.32 0 0 0 0 0.25 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+img, svg { display: block; max-width: 100%; }
+::selection { background: var(--tb-olive); color: var(--tb-cream); }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  line-height: 1.08;
+  margin: 0 0 0.5em;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+h1 { font-size: clamp(2.9rem, 8vw, 5.6rem); font-weight: 300; }
+h2 { font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 300; }
+h3 { font-size: clamp(1.5rem, 2.6vw, 1.85rem); font-weight: 500; letter-spacing: 0; }
+/* Italic accent words inside headings: <em>sorted</em> */
+h1 em, h2 em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--tb-olive);
+}
+.on-dark h1 em, .on-dark h2 em { color: var(--tb-mist); }
+p { margin: 0 0 1em; max-width: var(--measure); text-wrap: pretty; }
+a { color: inherit; text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+
+/* Visible focus for keyboard users */
+:focus-visible {
+  outline: 3px solid var(--tb-olive);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.on-dark :focus-visible { outline-color: var(--tb-cream); }
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.skip-link {
+  position: absolute; left: 1rem; top: -4rem; z-index: 300;
+  background: var(--tb-navy); color: var(--tb-cream);
+  padding: 0.6rem 1rem; border-radius: var(--radius);
+}
+.skip-link:focus { top: 1rem; }
+
+/* ---------- Layout ---------- */
+.wrap {
+  width: 100%;
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.section { position: relative; padding-block: var(--space-section); }
+.section--paper { background: var(--tb-paper); }
+.section--dark { background: var(--tb-forest); color: var(--tb-cream); }
+.section--navy { background: var(--tb-navy); color: var(--tb-cream); }
+.section-head { max-width: 44rem; margin-bottom: clamp(2rem, 5vw, 3.5rem); }
+.section-head--center { margin-inline: auto; text-align: center; }
+.section-head--center p { margin-inline: auto; }
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--tb-olive);
+  margin: 0 0 1.25rem;
+}
+.eyebrow::before {
+  content: '';
+  width: 1.75rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+.section-head--center .eyebrow::after {
+  content: '';
+  width: 1.75rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+.on-dark .eyebrow { color: var(--tb-mist); }
+
+.lede {
+  font-size: clamp(1.15rem, 2vw, 1.35rem);
+  line-height: 1.6;
+  color: var(--tb-slate);
+}
+.on-dark .lede { color: #D5D6D2; }
+.muted { color: var(--tb-slate); }
+.on-dark .muted { color: var(--tb-mist); }
+
+/* Letterpress feel: a faint highlight under headline text on light backgrounds */
+.press { text-shadow: 0 1px 0 rgb(255 255 255 / 0.6); }
+
+/* Embossed mark: for logos "pressed" into paper, like the brand's letterpress card. */
+.emboss {
+  color: var(--tb-cream);
+  filter:
+    drop-shadow(-1px -1px 0 rgb(255 255 255 / 0.85))
+    drop-shadow(1px 1.5px 1px rgb(var(--tb-shade) / 0.22));
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  --btn-bg: var(--tb-navy);
+  --btn-fg: var(--tb-cream);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+  min-height: 3.1rem;
+  padding: 0.8rem 1.6rem;
+  border: 1.5px solid var(--btn-bg);
+  border-radius: 999px;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font: 600 1rem/1.2 var(--font-body);
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease), background-color 0.25s, color 0.25s, border-color 0.25s;
+}
+.btn .arrow { transition: transform 0.35s var(--ease); }
+.btn:hover .arrow { transform: translateX(4px); }
+.btn--primary { box-shadow: 0 10px 24px -14px rgb(var(--tb-shade) / 0.8); }
+.btn--primary:hover {
+  --btn-bg: var(--tb-forest);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px -14px rgb(var(--tb-shade) / 0.7);
+}
+.btn--ghost { --btn-bg: transparent; --btn-fg: var(--tb-navy); border-color: var(--tb-navy); }
+.btn--ghost:hover { --btn-bg: var(--tb-navy); --btn-fg: var(--tb-cream); }
+.on-dark .btn--primary { --btn-bg: var(--tb-cream); --btn-fg: var(--tb-navy); }
+.on-dark .btn--primary:hover { --btn-bg: #fff; }
+.on-dark .btn--ghost { --btn-fg: var(--tb-cream); border-color: rgb(234 231 223 / 0.6); }
+.on-dark .btn--ghost:hover { --btn-bg: var(--tb-cream); --btn-fg: var(--tb-navy); }
+.btn-row { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-weight: 600;
+  color: var(--tb-navy);
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat;
+  padding-bottom: 2px;
+  transition: background-size 0.4s var(--ease);
+}
+.text-link::after { content: '\2192'; transition: transform 0.35s var(--ease); }
+.text-link:hover { background-size: 0% 1px; background-position: 100% 100%; }
+.text-link:hover::after { transform: translateX(4px); }
+.on-dark .text-link { color: var(--tb-cream); }
+
+/* ---------- Cards ---------- */
+.card {
+  position: relative;
+  background: var(--tb-paper);
+  border: 1px solid rgb(255 255 255 / 0.6);
+  border-radius: var(--radius-lg);
+  padding: clamp(1.6rem, 3.2vw, 2.5rem);
+  box-shadow: var(--shadow-soft);
+}
+.card--lift { transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease); }
+.card--lift:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: var(--tb-olive);
+  color: var(--tb-cream);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.badge--soft { background: rgb(87 82 56 / 0.12); color: var(--tb-olive); }
+
+/* Line icons (see components/Icon.astro) */
+.icon { width: 1.5rem; height: 1.5rem; flex-shrink: 0; }
+.icon-bubble {
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
+  background: var(--tb-cream);
+  color: var(--tb-olive);
+  box-shadow: inset 0 1px 2px rgb(var(--tb-shade) / 0.12), 0 1px 0 rgb(255 255 255 / 0.8);
+}
+
+/* ---------- Placeholders ----------
+   Text in [PLACEHOLDER: ...] still needs real content. */
+.ph { font-style: italic; color: var(--tb-olive); }
+.on-dark .ph { color: var(--tb-mist); }
+
+/* Draft markers: only when `showDraftMarkers` is on in site.config.ts. */
+[data-drafts] .draft {
+  outline: 1.5px dashed rgb(87 82 56 / 0.6);
+  outline-offset: 4px;
+}
+.draft-banner {
+  background: var(--tb-olive);
+  color: var(--tb-cream);
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 0.5rem var(--gutter);
+}
+.draft-banner p { margin: 0 auto; max-width: none; }
+
+/* ---------- Scroll reveal ----------
+   Elements with data-reveal fade up as they enter the screen.
+   Only active when JS is running and motion is allowed (see Base.astro). */
+.reveal-on [data-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+  transition-delay: calc(var(--d, 0) * 90ms);
+}
+.reveal-on [data-reveal='fade'] { transform: none; }
+.reveal-on [data-reveal='scale'] { transform: scale(0.96); }
+.reveal-on [data-reveal].is-in { opacity: 1; transform: none; }
+
+/* ---------- Page transitions (supported browsers) ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root) { animation: 0.28s var(--ease-soft) both vt-out; }
+  ::view-transition-new(root) { animation: 0.5s var(--ease) both vt-in; }
+  @keyframes vt-out { to { opacity: 0; } }
+  @keyframes vt-in { from { opacity: 0; transform: translateY(10px); } }
+}
+.site-header { view-transition-name: site-header; }
+
+/* ---------- Motion preferences ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

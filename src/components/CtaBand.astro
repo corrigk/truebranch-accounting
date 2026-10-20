@@ -1,0 +1,71 @@
+---
+/* Closing call-to-action used at the bottom of pages.
+   Pass your own heading and text, or leave them out for the defaults.
+   Wrap a word in <em> for the italic accent. */
+import Brand from './Brand.astro';
+import LeafShadow from './LeafShadow.astro';
+import { url, quoteHref } from '../site.config';
+interface Props { heading?: string; text?: string; button?: string; href?: string }
+const {
+  heading = 'Ready to feel <em>calmer</em> about your numbers?',
+  text = 'Answer a few quick questions. It takes about two minutes, and I’ll get back to you with a quote.',
+  button = 'Get a quote',
+  href = quoteHref,
+} = Astro.props;
+---
+<section class="cta-band" aria-labelledby="cta-title">
+  <div class="wrap">
+    <div class="cta-band__panel on-dark" data-reveal="scale">
+      <LeafShadow tone="dark" />
+      <Brand name="branch" class="cta-band__branch" />
+      <div class="cta-band__seal" aria-hidden="true">
+        <Brand name="emblem" />
+      </div>
+      <div class="cta-band__inner">
+        <h2 id="cta-title" class="draft" set:html={heading} />
+        <p class="lede draft">{text}</p>
+        <a class="btn btn--primary" href={url(href)}>{button} <span class="arrow" aria-hidden="true">→</span></a>
+        <p class="cta-band__small">Takes about 2 minutes · No obligation</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-band { padding-block: 0 var(--space-section); }
+  .cta-band__panel {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    border-radius: clamp(1.25rem, 3vw, 2.25rem);
+    background:
+      radial-gradient(50rem 26rem at 90% 0%, rgb(255 255 255 / 0.08), transparent 70%),
+      var(--tb-forest);
+    color: var(--tb-cream);
+    padding: clamp(3.5rem, 9vw, 6.5rem) var(--gutter);
+    text-align: center;
+    box-shadow: var(--shadow-lift);
+  }
+  .cta-band__panel :global(.cta-band__branch) {
+    position: absolute;
+    width: clamp(18rem, 40vw, 30rem);
+    left: -6rem;
+    bottom: -4rem;
+    color: var(--tb-olive);
+    opacity: 0.6;
+    rotate: -14deg;
+    z-index: -1;
+  }
+  .cta-band__seal {
+    position: absolute;
+    top: clamp(1.25rem, 3vw, 2.25rem);
+    right: clamp(1.25rem, 3vw, 2.5rem);
+    width: clamp(2.75rem, 5vw, 4rem);
+    color: var(--tb-mist);
+    opacity: 0.65;
+  }
+  .cta-band__inner { position: relative; display: flex; flex-direction: column; align-items: center; }
+  .cta-band h2 { max-width: 18ch; }
+  .cta-band .lede { margin-inline: auto; max-width: 44ch; margin-bottom: 2.25rem; }
+  .cta-band__small { margin: 1.1rem 0 0; font-size: 0.88rem; color: var(--tb-mist); }
+</style>

@@ -1,0 +1,196 @@
+---
+/* "From shoebox to sorted" — a pile of example receipts that tidies itself
+   into a neat, categorised ledger. Plays once when scrolled into view;
+   the button lets visitors replay it. All items are made-up examples.
+
+   Without JavaScript (or with reduced motion) it simply shows the tidy version. */
+import Icon from './Icon.astro';
+
+type Item = { what: string; amount: string; cat: string; inflow?: boolean; mess: [number, number, number] };
+// mess = [x offset %, y offset in rows, rotation in degrees] for the "pile" look
+const items: Item[] = [
+  { what: 'Client payment', amount: '+$1,200.00', cat: 'Income', inflow: true, mess: [18, 2.2, -9] },
+  { what: 'Coffee with a client', amount: '$14.50', cat: 'Meals', mess: [-12, 3.6, 7] },
+  { what: 'New camera lens', amount: '$389.00', cat: 'Equipment', mess: [24, -0.4, 12] },
+  { what: 'Website hosting', amount: '$24.00', cat: 'Software', mess: [-20, 1.6, -14] },
+  { what: 'Client payment', amount: '+$850.00', cat: 'Income', inflow: true, mess: [6, -2.4, 5] },
+  { what: 'Gas, client shoot', amount: '$46.20', cat: 'Travel', mess: [-6, -1.2, -4] },
+  { what: 'Printer ink', amount: '$38.00', cat: 'Supplies', mess: [14, -4.4, -11] },
+];
+---
+<div class="shoebox is-sorted" data-shoebox>
+  <div class="shoebox__bar">
+    <span class="shoebox__label">
+      <span class="shoebox__state shoebox__state--mess">The shoebox</span>
+      <span class="shoebox__state shoebox__state--sorted">Sorted</span>
+    </span>
+    <button type="button" class="shoebox__btn" hidden aria-pressed="true">
+      <span class="shoebox__btn-sort">Sort it out</span>
+      <span class="shoebox__btn-mess">Mess it up again</span>
+    </button>
+  </div>
+
+  <ol class="shoebox__list" aria-label="Example transactions">
+    {items.map((it, i) => (
+      <li
+        class:list={['shoebox__item', { 'is-in': it.inflow }]}
+        style={`--mx:${it.mess[0]}%; --my:${it.mess[1]}; --mr:${it.mess[2]}deg; --i:${i}`}
+      >
+        <Icon name="receipt" class="shoebox__icon" />
+        <span class="shoebox__what">{it.what}</span>
+        <span class="shoebox__cat">{it.cat}</span>
+        <span class="shoebox__amt">{it.amount}</span>
+      </li>
+    ))}
+  </ol>
+
+  <div class="shoebox__totals" aria-hidden="true">
+    <span>Money in <strong>$2,050.00</strong></span>
+    <span>Money out <strong>$511.70</strong></span>
+  </div>
+  <p class="shoebox__note">Example transactions, for illustration.</p>
+  <p class="visually-hidden" aria-live="polite" data-shoebox-status></p>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-shoebox]').forEach((box) => {
+    const btn = box.querySelector<HTMLButtonElement>('.shoebox__btn')!;
+    const status = box.querySelector<HTMLElement>('[data-shoebox-status]')!;
+    const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    btn.hidden = false;
+
+    const set = (sorted: boolean, announce = true) => {
+      box.classList.toggle('is-sorted', sorted);
+      btn.setAttribute('aria-pressed', String(sorted));
+      if (announce) status.textContent = sorted ? 'Sorted into categories with totals.' : 'Back in the shoebox.';
+    };
+    btn.addEventListener('click', () => set(!box.classList.contains('is-sorted')));
+
+    if (calm) return; // keep the tidy version, no automatic animation
+    set(false, false);
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          io.disconnect();
+          setTimeout(() => set(true, false), 900);
+        }
+      },
+      { threshold: 0.55 },
+    );
+    io.observe(box);
+  });
+</script>
+
+<style>
+  .shoebox {
+    --row: 3.4rem;
+    position: relative;
+    background: #F8F6F1;
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.25rem 1rem;
+    box-shadow: var(--shadow-lift);
+  }
+  .shoebox__bar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 0.9rem; }
+  .shoebox__label {
+    position: relative;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--tb-slate);
+  }
+  .shoebox__state { transition: opacity 0.4s; }
+  .shoebox__state--sorted { position: absolute; left: 0; opacity: 0; color: var(--tb-olive); }
+  .shoebox.is-sorted .shoebox__state--mess { opacity: 0; }
+  .shoebox.is-sorted .shoebox__state--sorted { opacity: 1; }
+
+  .shoebox__btn {
+    min-height: 2.5rem;
+    padding: 0.4rem 1rem;
+    border: 1.5px solid var(--tb-navy);
+    border-radius: 999px;
+    background: var(--tb-navy);
+    color: var(--tb-cream);
+    font: 600 0.88rem var(--font-body);
+    cursor: pointer;
+    transition: background-color 0.25s, color 0.25s;
+  }
+  .shoebox__btn[hidden] { display: none; }
+  .shoebox__btn-mess { display: none; }
+  .shoebox.is-sorted .shoebox__btn { background: transparent; color: var(--tb-navy); }
+  .shoebox.is-sorted .shoebox__btn-sort { display: none; }
+  .shoebox.is-sorted .shoebox__btn-mess { display: inline; }
+
+  .shoebox__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.3rem; }
+  .shoebox__item {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: var(--row);
+    padding: 0.5rem 0.85rem;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 0.95rem;
+    box-shadow: 0 8px 18px -10px rgb(33 49 63 / 0.35);
+    /* pile position */
+    transform: translate(calc(var(--mx) * var(--spread, 1)), calc(var(--my) * var(--row) * 0.5)) rotate(calc(var(--mr) * var(--spread, 1))) scale(0.92);
+    transition:
+      transform 0.9s var(--ease),
+      box-shadow 0.9s var(--ease),
+      background-color 0.6s;
+    transition-delay: calc(var(--i) * 70ms);
+  }
+  .shoebox.is-sorted .shoebox__item {
+    transform: none;
+    background: transparent;
+    box-shadow: inset 0 -1px 0 var(--tb-line);
+    border-radius: 0;
+  }
+  .shoebox :global(.shoebox__icon) { width: 1.2rem; color: var(--tb-mist); }
+  .shoebox__what { color: var(--tb-navy); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .shoebox__cat {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: rgb(88 101 114 / 0.12);
+    color: var(--tb-slate);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.5s, transform 0.5s var(--ease);
+    transition-delay: calc(0.5s + var(--i) * 70ms);
+  }
+  .shoebox__item.is-in .shoebox__cat { background: rgb(87 82 56 / 0.15); color: var(--tb-olive); }
+  .shoebox.is-sorted .shoebox__cat { opacity: 1; transform: none; }
+  .shoebox__amt { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--tb-navy); }
+  .shoebox__item.is-in .shoebox__amt { color: var(--tb-olive); }
+
+  .shoebox__totals {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 0.75rem;
+    padding: 0.85rem;
+    border-radius: 10px;
+    background: var(--tb-navy);
+    color: var(--tb-mist);
+    font-size: 0.9rem;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.6s, transform 0.6s var(--ease);
+  }
+  .shoebox__totals strong { color: var(--tb-cream); margin-left: 0.35rem; font-variant-numeric: tabular-nums; }
+  .shoebox.is-sorted .shoebox__totals { opacity: 1; transform: none; transition-delay: 1s; }
+  .shoebox__note { margin: 0.75rem 0 0; font-size: 0.8rem; color: var(--tb-slate); text-align: center; max-width: none; }
+
+  @media (max-width: 30rem) {
+    .shoebox { --spread: 0.4; }
+    .shoebox__item { grid-template-columns: 1fr auto; gap: 0.15rem 0.75rem; }
+    .shoebox :global(.shoebox__icon) { display: none; }
+    .shoebox__cat { grid-row: 2; justify-self: start; }
+    .shoebox__amt { grid-row: 1 / span 2; grid-column: 2; }
+  }
+</style>

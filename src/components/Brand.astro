@@ -1,0 +1,32 @@
+---
+/* Inlines one of the official brand SVGs from src/assets/brand/.
+   They are drawn in `currentColor`, so set the color with CSS
+   (navy on cream, cream on dark). Never stretch or add effects.
+
+   name:  lockup1  "TrueBranch / ACCOUNTING" wordmark
+          lockup2  olive branch above the wordmark (primary logo)
+          emblem   "TB" in a double oval
+          tbbranch branch with "T" and "B"
+          branch   the olive branch on its own (decorative)
+   label: give one for a meaningful logo; leave it out for decoration. */
+import lockup1 from '../assets/brand/lockup1.svg?raw';
+import lockup2 from '../assets/brand/lockup2.svg?raw';
+import emblem from '../assets/brand/emblem.svg?raw';
+import tbbranch from '../assets/brand/tbbranch.svg?raw';
+import branch from '../assets/brand/branch.svg?raw';
+
+const svgs = { lockup1, lockup2, emblem, tbbranch, branch };
+interface Props {
+  name: keyof typeof svgs;
+  label?: string;
+  class?: string;
+  style?: string;
+}
+const { name, label, class: className = '', style } = Astro.props;
+const a11y = label ? `role="img" aria-label="${label}"` : 'aria-hidden="true" focusable="false"';
+const html = svgs[name].replace(
+  '<svg ',
+  `<svg class="brand brand--${name} ${className}" ${a11y} ${style ? `style="${style}"` : ''} `,
+);
+---
+<Fragment set:html={html} />

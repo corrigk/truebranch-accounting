@@ -1,0 +1,142 @@
+---
+/* ABOUT PAGE
+   Franccesca's story is TBD. Replace each [PLACEHOLDER] paragraph with her words.
+
+   PHOTOS: list one or two photos below. The layout adjusts automatically.
+   For a real photo, set `src` (file in /public/assets/photos/) and `alt`.
+   Delete the second entry if there's only one photo. */
+import Base from '../../layouts/Base.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Brand from '../../components/Brand.astro';
+import Icon from '../../components/Icon.astro';
+import PhotoPlaceholder from '../../components/PhotoPlaceholder.astro';
+import { site, serviceArea } from '../../site.config';
+
+const photos: { src?: string; alt?: string; placeholderLabel: string }[] = [
+  { placeholderLabel: 'photo of Franccesca' },
+  { placeholderLabel: 'optional second photo (e.g. with her husband)' },
+];
+
+const values = [
+  { icon: 'chat', title: 'Plain language', text: 'No jargon. If a term is unavoidable, I’ll explain it.' },
+  { icon: 'heart', title: 'No judgment', text: 'Wherever your books are today is a fine place to start.' },
+  { icon: 'user', title: 'One person, start to finish', text: 'You always work with me directly.' },
+] as const;
+---
+<Base
+  title="About"
+  description="Meet Franccesca Thomas, the bookkeeper behind TrueBranch Accounting."
+>
+  <PageIntro eyebrow="About" title={`Hi, I’m <em>${site.ownerFirstName}</em>.`} draftTitle={false}>
+    <p class="lede draft">I help small business owners feel calm and clear about their money.</p>
+  </PageIntro>
+
+  <section class="section about-sec" aria-labelledby="story-title">
+    <div class:list={['wrap', 'about', { 'about--two': photos.length > 1 }]}>
+      <div class="about__photos" data-reveal="scale">
+        {photos.map((p, i) => (
+          <PhotoPlaceholder label={p.placeholderLabel} src={p.src} alt={p.alt} class={`about__photo about__photo--${i}`} />
+        ))}
+        <Brand name="branch" class="about__sprig" />
+      </div>
+
+      <div class="about__story">
+        <p class="eyebrow" data-reveal>My story</p>
+        <h2 id="story-title" class="press" data-reveal style="--d:1">Why I do <em>this work</em></h2>
+        <div data-reveal style="--d:2">
+          <p class="ph">[PLACEHOLDER: how Franccesca got into bookkeeping.]</p>
+          <p class="ph">[PLACEHOLDER: why she started TrueBranch, and what she loves about helping small business owners.]</p>
+          <p class="ph">[PLACEHOLDER: something personal, e.g. where she’s based, family, what she does outside work.]</p>
+          <p class="ph">[PLACEHOLDER: if her husband is part of the business, a line about his role. Otherwise delete.]</p>
+        </div>
+        <div class="signoff" data-reveal style="--d:3">
+          <Brand name="emblem" class="signoff__seal" />
+          <div>
+            <p class="signoff__name">{site.ownerFirstName}</p>
+            <p class="signoff__role muted">{site.owner}, {site.legalName}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHAT WORKING WITH ME IS LIKE ============ -->
+  <section class="section section--paper" aria-labelledby="values-title">
+    <div class="wrap">
+      <div class="section-head section-head--center" data-reveal>
+        <p class="eyebrow">Working together</p>
+        <h2 id="values-title" class="press">What working with me is <em>like</em></h2>
+      </div>
+      <ul class="values" role="list">
+        {values.map((v, i) => (
+          <li class="card card--lift value draft" data-reveal style={`--d:${i}`}>
+            <span class="icon-bubble"><Icon name={v.icon} /></span>
+            <h3>{v.title}</h3>
+            <p>{v.text}</p>
+          </li>
+        ))}
+      </ul>
+      <p class="area" data-reveal><Icon name="pin" /> {serviceArea()}</p>
+    </div>
+  </section>
+
+  <CtaBand heading="I’d love to hear about <em>your business</em>." text="Tell me a little about what you do and where things stand. It takes about two minutes." />
+</Base>
+
+<style>
+  .about-sec { overflow-x: clip; } /* clip the decorative overhangs without breaking sticky */
+  .about { display: grid; gap: clamp(3rem, 7vw, 6rem); align-items: start; }
+  @media (min-width: 56rem) {
+    .about { grid-template-columns: minmax(18rem, 27rem) 1fr; }
+    .about__photos { position: sticky; top: calc(var(--header-h) + 2rem); }
+  }
+  .about__photos { position: relative; width: min(100%, 27rem); margin-inline: auto; }
+  .about--two .about__photos { padding-bottom: 32%; }
+  .about--two .about__photos :global(.about__photo--1) {
+    position: absolute;
+    width: 46%;
+    right: -8%;
+    bottom: 0;
+    border: 6px solid var(--tb-cream);
+    rotate: 4deg;
+  }
+  .about__photos :global(.about__sprig) {
+    position: absolute;
+    width: 55%;
+    left: -14%;
+    top: -6%;
+    color: var(--tb-olive);
+    opacity: 0.75;
+    rotate: -18deg;
+    pointer-events: none;
+  }
+
+  .about__story { padding-top: 1rem; }
+  .signoff {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--tb-line);
+  }
+  .signoff :global(.signoff__seal) { width: 3.25rem; color: var(--tb-olive); }
+  .signoff p { margin: 0; }
+  .signoff__name {
+    font-family: var(--font-heading);
+    font-size: 2.4rem;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1;
+    color: var(--tb-olive);
+  }
+  .signoff__role { font-size: 0.9rem; margin-top: 0.3rem !important; }
+
+  .values { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.5rem; }
+  @media (min-width: 48rem) { .values { grid-template-columns: repeat(3, 1fr); } }
+  .value .icon-bubble { margin-bottom: 1.25rem; }
+  .value p { color: var(--tb-slate); margin: 0; }
+  .area { display: flex; justify-content: center; gap: 0.5rem; margin: 2.5rem auto 0; color: var(--tb-slate); text-align: center; }
+  .area :global(.icon) { width: 1.2rem; color: var(--tb-olive); margin-top: 0.15rem; }
+</style>

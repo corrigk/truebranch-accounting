@@ -1,0 +1,605 @@
+---
+/* GET A QUOTE — questionnaire
+   Submissions go through Web3Forms to the email tied to the access key in
+   src/site.config.ts. Nothing is stored on this site.
+
+   Without JavaScript: one normal form with all questions, posted directly.
+   With JavaScript: a guided, one-question-at-a-time flow. A little branch
+   grows a leaf for each question. It submits in the background and shows
+   a thank-you "seal" on the page.
+
+   Links can pre-fill answers, e.g. get-a-quote/?stress=taxes,mixing&tax=yes
+
+   To change a question, edit the lists below. */
+import Base from '../../layouts/Base.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import Brand from '../../components/Brand.astro';
+import Icon from '../../components/Icon.astro';
+import { site, url } from '../../site.config';
+
+const businessTypes = [
+  'Creative or freelance work',
+  'Consulting or professional services',
+  'Retail or online shop',
+  'Food, hospitality or events',
+  'Trades or home services',
+];
+const tracking = ['A spreadsheet', 'An app or software', 'A shoebox of receipts', 'Not really, yet'];
+const confidence = ['Not at all', 'Somewhat', 'Pretty confident'];
+// Checkboxes. Each gets its own field name so the email lists them clearly.
+const stresses = [
+  { name: 'stress_expenses', label: 'Sorting out expenses' },
+  { name: 'stress_owe', label: 'Knowing what I owe' },
+  { name: 'stress_taxes', label: 'Getting ready for taxes' },
+  { name: 'stress_mixing', label: 'Mixing personal and business money' },
+  { name: 'stress_other', label: 'Something else' },
+];
+const volume = ['A few', 'Dozens', 'Hundreds', 'Not sure'];
+const taxInterest = ['Yes', 'Maybe later', 'No'];
+const contactPrefs = ['Email', 'Phone call', 'Text message'];
+
+// Encouraging notes shown above each step in the guided version.
+const cheers = [
+  'Let’s start easy.',
+  'Great. No judgment here, ever.',
+  'Honest answers help the most.',
+  'Pick as many as you like.',
+  'A rough guess is perfect.',
+  'Almost there.',
+  'Optional, but I’d love to hear it.',
+  'Last one!',
+];
+// Leaf positions on the progress branch: [x, y, rotation]
+const leaves: [number, number, number][] = [
+  [22, 33, -40], [46, 31, 34], [72, 27, -38], [98, 24, 32], [124, 20, -36], [150, 16, 30], [176, 12, -32], [204, 8, 26],
+];
+
+// No-JS fallback: after submitting, Web3Forms redirects here.
+// Needs SITE_URL to be set (see README); otherwise Web3Forms shows its own thank-you page.
+const thanksUrl = Astro.site ? new URL(url('get-a-quote/thanks/'), Astro.site).href : '';
+---
+<Base
+  title="Get a quote"
+  description="Answer a few quick questions about your business and get a bookkeeping quote. It takes about two minutes."
+>
+  <PageIntro eyebrow="Get a quote" title="Let’s see how I can <em>help</em>.">
+    <p class="lede draft">
+      A few quick questions, mostly multiple choice. It takes about two minutes, and there are
+      no wrong answers.
+    </p>
+  </PageIntro>
+
+  <section class="section quote-sec">
+    <div class="wrap quote">
+      <div class="quote__main" data-reveal>
+        <div class="qcard">
+          <!-- Progress (guided version only) -->
+          <div class="qprogress" hidden>
+            <svg class="qprogress__branch" viewBox="0 0 232 44" aria-hidden="true">
+              <path class="qprogress__stem" d="M4 40 C 70 34, 150 24, 228 4" />
+              {leaves.map(([x, y, r], i) => (
+                <path class="qprogress__leaf" data-leaf={i} d="M0 0 C 6 -6.5, 19 -6.5, 26 0 C 19 6.5, 6 6.5, 0 0 Z" transform={`translate(${x} ${y}) rotate(${r})`} />
+              ))}
+            </svg>
+            <div class="qprogress__text">
+              <span class="qprogress__count" aria-live="polite">Question <span data-step-now>1</span> of {cheers.length}</span>
+              <span class="qprogress__cheer" data-cheer>{cheers[0]}</span>
+            </div>
+          </div>
+
+          <form
+            id="quote-form"
+            class="form"
+            action={site.formEndpoint}
+            method="POST"
+            data-access-key={site.formAccessKey}
+            data-cheers={JSON.stringify(cheers)}
+          >
+            <input type="hidden" name="access_key" value={site.formAccessKey} />
+            <input type="hidden" name="subject" value="New quote request from the TrueBranch website" />
+            <input type="hidden" name="from_name" value="TrueBranch website" />
+            {thanksUrl && <input type="hidden" name="redirect" value={thanksUrl} />}
+            <!-- Spam trap: real people never see or tick this. -->
+            <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display: none" />
+
+            <fieldset class="step" data-auto>
+              <legend><span class="q-num">1</span> What kind of business do you run?</legend>
+              <div class="choices">
+                {businessTypes.map((t) => (
+                  <label class="choice"><input type="radio" name="business_type" value={t} /> <span>{t}</span></label>
+                ))}
+                <label class="choice"><input type="radio" name="business_type" value="Other" /> <span>Other</span></label>
+              </div>
+              <label class="field field--sub">
+                <span>If other, or to add detail (optional)</span>
+                <input type="text" name="business_detail" maxlength="200" autocomplete="off" />
+              </label>
+            </fieldset>
+
+            <fieldset class="step" data-auto>
+              <legend><span class="q-num">2</span> How are you tracking your money today?</legend>
+              <div class="choices">
+                {tracking.map((t) => <label class="choice"><input type="radio" name="tracking" value={t} /> <span>{t}</span></label>)}
+              </div>
+            </fieldset>
+
+            <fieldset class="step" data-auto>
+              <legend><span class="q-num">3</span> How confident do you feel about your numbers right now?</legend>
+              <div class="choices choices--row choices--mood">
+                {confidence.map((t, i) => (
+                  <label class="choice choice--mood">
+                    <input type="radio" name="confidence" value={t} />
+                    <span class="mood" aria-hidden="true" data-mood={i}></span>
+                    <span>{t}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+
+            <fieldset class="step">
+              <legend><span class="q-num">4</span> What’s stressing you most? <span class="hint">Pick any that apply.</span></legend>
+              <div class="choices">
+                {stresses.map((s) => <label class="choice"><input type="checkbox" name={s.name} value="Yes" /> <span>{s.label}</span></label>)}
+              </div>
+            </fieldset>
+
+            <fieldset class="step" data-auto>
+              <legend><span class="q-num">5</span> Roughly how many transactions a month? <span class="hint">Sales, purchases, bills and payments all count.</span></legend>
+              <div class="choices choices--row">
+                {volume.map((t) => <label class="choice"><input type="radio" name="monthly_transactions" value={t} /> <span>{t}</span></label>)}
+              </div>
+            </fieldset>
+
+            <fieldset class="step" data-auto>
+              <legend><span class="q-num">6</span> Are you also interested in help with taxes? <span class="hint">Tax services are coming soon.</span></legend>
+              <div class="choices choices--row">
+                {taxInterest.map((t) => <label class="choice"><input type="radio" name="tax_interest" value={t} /> <span>{t}</span></label>)}
+              </div>
+            </fieldset>
+
+            <fieldset class="step">
+              <legend><span class="q-num">7</span> Anything else you’d like me to know? <span class="hint">Optional</span></legend>
+              <label class="field">
+                <span class="visually-hidden">Anything else you’d like me to know</span>
+                <textarea name="message" rows="5" maxlength="2000" placeholder="Questions, worries, what you’re hoping for…"></textarea>
+              </label>
+            </fieldset>
+
+            <fieldset class="step">
+              <legend><span class="q-num">8</span> How can I reach you?</legend>
+              <div class="field-grid">
+                <label class="field">
+                  <span>Name <abbr title="required" aria-hidden="true">*</abbr></span>
+                  <input type="text" name="name" required autocomplete="name" maxlength="120" />
+                </label>
+                <label class="field">
+                  <span>Email <abbr title="required" aria-hidden="true">*</abbr></span>
+                  <input type="email" name="email" required autocomplete="email" maxlength="200" />
+                </label>
+                <label class="field">
+                  <span>Phone (optional)</span>
+                  <input type="tel" name="phone" autocomplete="tel" maxlength="40" />
+                </label>
+              </div>
+              <p class="sub-legend" id="pref-label">Best way to reach you</p>
+              <div class="choices choices--row" role="radiogroup" aria-labelledby="pref-label">
+                {contactPrefs.map((t, i) => <label class="choice"><input type="radio" name="contact_preference" value={t} checked={i === 0} /> <span>{t}</span></label>)}
+              </div>
+              <p class="required-note"><span aria-hidden="true">*</span> Required</p>
+            </fieldset>
+
+            <div class="form__status" role="alert" hidden></div>
+
+            <div class="form__nav">
+              <button type="button" class="btn btn--ghost form__back" hidden>
+                <span aria-hidden="true">←</span> Back
+              </button>
+              <button type="button" class="btn btn--primary form__next" hidden>
+                Next <span class="arrow" aria-hidden="true">→</span>
+              </button>
+              <button type="submit" class="btn btn--primary form__submit">
+                Send my answers <span class="arrow" aria-hidden="true">→</span>
+              </button>
+            </div>
+          </form>
+
+          <div id="quote-success" class="success" tabindex="-1" hidden>
+            <div class="stamp" aria-hidden="true">
+              <Brand name="emblem" />
+            </div>
+            <h2>Thank you<span data-thanks-name></span>!</h2>
+            <p class="lede draft">Your answers are on their way to me. I’ll be in touch within {site.responseTime}.</p>
+            <p class="draft muted">In the meantime, take a breath. You’ve already taken the first step.</p>
+          </div>
+        </div>
+      </div>
+
+      <aside class="quote__aside" aria-label="About this form" data-reveal style="--d:1">
+        <div class="aside-card">
+          <h2>What happens <em>next</em></h2>
+          <ol class="next-steps">
+            <li><Icon name="mail" /><span class="draft">I read your answers, personally.</span></li>
+            <li><Icon name="clock" /><span class="draft">I reply within {site.responseTime} with a few questions or a quote.</span></li>
+            <li><Icon name="heart" /><span class="draft">No pressure and no obligation.</span></li>
+          </ol>
+          <p class="quote__alt">Prefer email? <a href={`mailto:${site.email}`}>{site.email}</a></p>
+        </div>
+        <p class="notice">
+          <Icon name="shield" />
+          <span><strong>Please don’t include</strong> account numbers, Social Security numbers, or other sensitive
+          financial details here.</span>
+        </p>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const form = document.getElementById('quote-form') as HTMLFormElement | null;
+  const success = document.getElementById('quote-success');
+
+  if (form && success) {
+    const steps = [...form.querySelectorAll<HTMLFieldSetElement>('.step')];
+    const status = form.querySelector<HTMLElement>('.form__status')!;
+    const back = form.querySelector<HTMLButtonElement>('.form__back')!;
+    const next = form.querySelector<HTMLButtonElement>('.form__next')!;
+    const submit = form.querySelector<HTMLButtonElement>('.form__submit')!;
+    const progress = document.querySelector<HTMLElement>('.qprogress')!;
+    const leaves = [...progress.querySelectorAll<SVGPathElement>('[data-leaf]')];
+    const stepNow = progress.querySelector<HTMLElement>('[data-step-now]')!;
+    const cheerEl = progress.querySelector<HTMLElement>('[data-cheer]')!;
+    const cheers: string[] = JSON.parse(form.dataset.cheers || '[]');
+    const fallbackEmail = document.querySelector('.quote__alt a')?.textContent ?? '';
+    const submitLabel = submit.innerHTML;
+    let current = 0;
+
+    // ---- Pre-fill from the link (e.g. ?stress=taxes,mixing&tax=yes) ----
+    const params = new URLSearchParams(location.search);
+    (params.get('stress') || '').split(',').filter(Boolean).forEach((key) => {
+      const box = form.querySelector<HTMLInputElement>(`input[name="stress_${CSS.escape(key)}"]`);
+      if (box) box.checked = true;
+    });
+    if (params.get('tax') === 'yes') {
+      const yes = form.querySelector<HTMLInputElement>('input[name="tax_interest"][value="Yes"]');
+      if (yes) yes.checked = true;
+    }
+
+    // ---- Guided, one-question-at-a-time mode ----
+    form.classList.add('is-guided');
+    progress.hidden = false;
+    back.hidden = false;
+    next.hidden = false;
+
+    const show = (index: number, focus = true) => {
+      current = Math.max(0, Math.min(index, steps.length - 1));
+      steps.forEach((s, i) => {
+        s.hidden = i !== current;
+        s.classList.toggle('is-active', i === current);
+      });
+      const last = current === steps.length - 1;
+      back.disabled = current === 0;
+      back.style.visibility = current === 0 ? 'hidden' : '';
+      next.hidden = last;
+      submit.hidden = !last;
+      stepNow.textContent = String(current + 1);
+      cheerEl.textContent = cheers[current] ?? '';
+      leaves.forEach((leaf, i) => {
+        leaf.classList.toggle('is-on', i < current);
+        leaf.classList.toggle('is-current', i === current);
+      });
+      status.hidden = true;
+      if (focus) {
+        const target = steps[current].querySelector<HTMLElement>('input:not([type=hidden]), textarea');
+        steps[current].setAttribute('tabindex', '-1');
+        (target ?? steps[current]).focus({ preventScroll: true });
+        const top = form.closest('.qcard')!.getBoundingClientRect().top + window.scrollY - 120;
+        if (window.scrollY > top) window.scrollTo({ top, behavior: 'smooth' });
+      }
+    };
+
+    next.addEventListener('click', () => show(current + 1));
+    back.addEventListener('click', () => show(current - 1));
+
+    // Single-choice questions move on by themselves after a tap or click
+    // (not when using arrow keys, so keyboard users stay in control).
+    steps.forEach((step, i) => {
+      if (!step.hasAttribute('data-auto')) return;
+      step.addEventListener('click', (e) => {
+        const input = (e.target as HTMLElement).closest('label')?.querySelector('input[type=radio]');
+        if (!input || (e as MouseEvent).detail === 0) return;
+        setTimeout(() => { if (current === i) show(i + 1); }, 420);
+      });
+    });
+
+    // Enter in a text field moves forward instead of submitting early.
+    form.addEventListener('keydown', (e) => {
+      const t = e.target as HTMLElement;
+      if (e.key === 'Enter' && t.tagName === 'INPUT' && current < steps.length - 1) {
+        e.preventDefault();
+        show(current + 1);
+      }
+    });
+
+    show(0, false);
+
+    // ---- Background submit with a friendly confirmation ----
+    const showError = (msg: string) => {
+      status.hidden = false;
+      status.textContent = msg;
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (current !== steps.length - 1) { show(steps.length - 1); return; }
+      if (!form.reportValidity()) return;
+      status.hidden = true;
+
+      if ((form.dataset.accessKey ?? '').startsWith('PLACEHOLDER')) {
+        showError('This form isn’t connected yet (no Web3Forms access key in site.config.ts).');
+        return;
+      }
+
+      submit.disabled = true;
+      submit.textContent = 'Sending…';
+      try {
+        const data = Object.fromEntries(new FormData(form));
+        const res = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(data),
+        });
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok || json.success === false) throw new Error(json.message || 'Request failed');
+        const first = String(data.name || '').trim().split(/\s+/)[0];
+        success.querySelector('[data-thanks-name]')!.textContent = first ? `, ${first}` : '';
+        form.hidden = true;
+        progress.hidden = true;
+        success.hidden = false;
+        success.focus();
+      } catch {
+        showError(
+          'Sorry, something went wrong sending your answers. Please try again in a moment' +
+            (fallbackEmail ? `, or email me at ${fallbackEmail}.` : '.'),
+        );
+      } finally {
+        submit.disabled = false;
+        submit.innerHTML = submitLabel;
+      }
+    });
+  }
+</script>
+
+<style>
+  .quote-sec { padding-top: clamp(1rem, 3vw, 2rem); }
+  .quote { display: grid; gap: 2rem; align-items: start; }
+  @media (min-width: 60rem) {
+    .quote { grid-template-columns: 1.7fr 1fr; gap: 3.5rem; }
+    .quote__aside { position: sticky; top: calc(var(--header-h) + 1.5rem); }
+  }
+
+  .qcard {
+    position: relative;
+    padding: clamp(1.5rem, 4.5vw, 3rem);
+    border-radius: clamp(1.25rem, 3vw, 2rem);
+    background: var(--tb-paper);
+    box-shadow: var(--shadow-lift);
+  }
+
+  /* ---- Progress branch ---- */
+  .qprogress {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--tb-line);
+  }
+  .qprogress[hidden] { display: none; }
+  .qprogress__branch { width: 13rem; overflow: visible; flex-shrink: 0; }
+  .qprogress__stem { fill: none; stroke: var(--tb-mist); stroke-width: 1.6; stroke-linecap: round; }
+  .qprogress__leaf {
+    fill: var(--tb-mist);
+    opacity: 0.22;
+    transform-box: fill-box;
+    transform-origin: 0% 50%;
+    transition: opacity 0.5s, fill 0.5s;
+  }
+  .qprogress__leaf.is-on { opacity: 1; fill: var(--tb-olive); animation: leaf-pop 0.6s var(--ease); }
+  .qprogress__leaf.is-current { opacity: 0.6; fill: var(--tb-olive); animation: leaf-breathe 2s var(--ease-soft) infinite alternate; }
+  @keyframes leaf-pop { 0% { scale: 0.3; } 60% { scale: 1.2; } 100% { scale: 1; } }
+  @keyframes leaf-breathe { from { scale: 0.85; } to { scale: 1.05; } }
+  .qprogress__text { display: flex; flex-direction: column; }
+  .qprogress__count { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--tb-slate); }
+  .qprogress__cheer { font-family: var(--font-heading); font-style: italic; font-size: 1.3rem; color: var(--tb-olive); }
+
+  /* ---- Steps ---- */
+  .form fieldset {
+    border: 0;
+    border-top: 1px solid var(--tb-line);
+    margin: 0;
+    padding: 2rem 0;
+    min-width: 0;
+  }
+  .form fieldset:first-of-type { border-top: 0; padding-top: 0; }
+  .form.is-guided fieldset { border-top: 0; padding: 0; }
+  .form.is-guided .step.is-active { animation: step-in 0.55s var(--ease); }
+  @keyframes step-in { from { opacity: 0; transform: translateX(18px); } }
+  .form fieldset:focus { outline: none; }
+  .form legend {
+    font-family: var(--font-heading);
+    font-size: clamp(1.6rem, 3.4vw, 2.2rem);
+    font-weight: 400;
+    line-height: 1.2;
+    padding: 0;
+    margin-bottom: 1.5rem;
+  }
+  .form:not(.is-guided) .q-num {
+    display: inline-grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    margin-right: 0.4rem;
+    border: 1px solid var(--tb-olive);
+    border-radius: 50%;
+    font: 600 0.85rem var(--font-body);
+    color: var(--tb-olive);
+    vertical-align: 0.25em;
+  }
+  .form.is-guided .q-num { display: none; }
+  .hint { display: block; font: 400 0.95rem var(--font-body); color: var(--tb-slate); margin-top: 0.4rem; }
+
+  .choices { display: grid; gap: 0.6rem; }
+  @media (min-width: 36rem) {
+    .choices { grid-template-columns: 1fr 1fr; }
+    .choices--row { grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); }
+  }
+  .choice {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    min-height: 3.4rem;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid transparent;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 1px 2px rgb(33 49 63 / 0.06);
+    cursor: pointer;
+    line-height: 1.3;
+    transition: border-color 0.2s, transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  }
+  .choice:hover { transform: translateY(-2px); box-shadow: var(--shadow-soft); }
+  .choice:has(input:checked) { border-color: var(--tb-navy); background: #FDFCF9; }
+  .choice:has(input:focus-visible) { outline: 3px solid var(--tb-olive); outline-offset: 2px; }
+  .choice input { width: 1.2rem; height: 1.2rem; margin: 0; flex-shrink: 0; accent-color: var(--tb-navy); }
+
+  /* Mood faces for the confidence question */
+  .choice--mood { flex-direction: column; justify-content: center; text-align: center; padding-block: 1.1rem; }
+  .choice--mood input { position: absolute; opacity: 0; }
+  .mood {
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 50%;
+    border: 1.5px solid var(--tb-slate);
+    position: relative;
+    transition: background-color 0.25s, border-color 0.25s;
+  }
+  .mood::before {
+    /* eyes */
+    content: '';
+    position: absolute;
+    top: 36%;
+    left: 30%;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--tb-slate);
+    box-shadow: 0.62rem 0 0 var(--tb-slate);
+  }
+  .mood::after {
+    /* mouth */
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 26%;
+    width: 1rem;
+    height: 0.5rem;
+    translate: -50% 0;
+    border: 1.5px solid var(--tb-slate);
+    border-color: var(--tb-slate) transparent transparent;
+    border-radius: 50% 50% 0 0;
+  }
+  .mood[data-mood='1']::after { height: 0; border-radius: 0; bottom: 32%; }
+  .mood[data-mood='2']::after { border-color: transparent transparent var(--tb-slate); border-radius: 0 0 50% 50%; bottom: 22%; }
+  .choice--mood:has(input:checked) .mood { background: var(--tb-olive); border-color: var(--tb-olive); }
+  .choice--mood:has(input:checked) .mood::before { background: var(--tb-cream); box-shadow: 0.62rem 0 0 var(--tb-cream); }
+  .choice--mood:has(input:checked) .mood::after { border-top-color: var(--tb-cream); }
+  .choice--mood:has(input:checked) .mood[data-mood='2']::after { border-top-color: transparent; border-bottom-color: var(--tb-cream); }
+
+  .field { display: grid; gap: 0.4rem; font-weight: 600; font-size: 0.95rem; }
+  .field--sub { margin-top: 1.25rem; font-weight: 400; color: var(--tb-slate); }
+  .field abbr { text-decoration: none; color: var(--tb-olive); }
+  .field input, .field textarea {
+    width: 100%;
+    font: 400 1.05rem var(--font-body);
+    color: var(--tb-navy);
+    background: #fff;
+    border: 1.5px solid var(--tb-line);
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    min-height: 3.2rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .field input:hover, .field textarea:hover { border-color: var(--tb-mist); }
+  .field input:focus, .field textarea:focus { outline: none; border-color: var(--tb-navy); box-shadow: 0 0 0 4px rgb(87 82 56 / 0.18); }
+  .field textarea { resize: vertical; }
+  .field textarea::placeholder { color: #7D8691; }
+  .field-grid { display: grid; gap: 1rem; }
+  @media (min-width: 36rem) { .field-grid { grid-template-columns: 1fr 1fr; } }
+  .sub-legend { font-weight: 600; font-size: 0.95rem; margin: 1.75rem 0 0.7rem; }
+  .required-note { font-size: 0.9rem; color: var(--tb-slate); margin: 1.25rem 0 0; }
+
+  .form__status {
+    margin: 1.5rem 0 0;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    border-left: 3px solid #8a3b2e;
+    background: #f6e9e4;
+    color: #5c2219;
+  }
+  .form__nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+  .form:not(.is-guided) .form__nav { justify-content: flex-start; }
+  .form__nav .btn[hidden] { display: none; }
+  .form__nav .btn:not(.form__back) { margin-left: auto; }
+  .form:not(.is-guided) .form__submit { margin-left: 0; }
+  .form__submit:disabled { opacity: 0.7; cursor: progress; }
+
+  /* ---- Success seal ---- */
+  .success { text-align: center; padding-block: 2rem; }
+  .success:focus { outline: none; }
+  .success p { margin-inline: auto; }
+  .stamp {
+    width: 7rem;
+    margin: 0 auto 1.5rem;
+    color: var(--tb-olive);
+    animation: stamp 0.9s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+  }
+  @keyframes stamp {
+    0%   { opacity: 0; transform: scale(2.4) rotate(-22deg); }
+    60%  { opacity: 1; }
+    100% { opacity: 1; transform: scale(1) rotate(-8deg); }
+  }
+
+  /* ---- Aside ---- */
+  .aside-card {
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    border-radius: var(--radius-lg);
+    background: var(--tb-navy);
+    color: var(--tb-cream);
+    box-shadow: var(--shadow-lift);
+  }
+  .aside-card h2 { font-size: clamp(1.8rem, 3vw, 2.2rem); }
+  .aside-card h2 em { color: var(--tb-mist); }
+  .next-steps { list-style: none; margin: 0 0 1.5rem; padding: 0; display: grid; gap: 1rem; }
+  .next-steps li { display: flex; gap: 0.85rem; align-items: flex-start; }
+  .next-steps :global(.icon) { width: 1.3rem; color: var(--tb-mist); margin-top: 0.15rem; }
+  .quote__alt { margin: 0; font-size: 0.95rem; color: var(--tb-mist); overflow-wrap: anywhere; }
+  .quote__alt a { color: var(--tb-cream); }
+  .notice {
+    display: flex;
+    gap: 0.85rem;
+    margin-top: 1rem;
+    padding: 1.1rem 1.25rem;
+    border-radius: var(--radius-lg);
+    background: rgb(87 82 56 / 0.1);
+    font-size: 0.95rem;
+  }
+  .notice :global(.icon) { width: 1.4rem; color: var(--tb-olive); margin-top: 0.1rem; }
+</style>

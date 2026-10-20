@@ -1,0 +1,279 @@
+---
+/* SERVICES PAGE
+   Service details and "how it works" steps are TBD. Bullets marked
+   [PLACEHOLDER] need Franccesca's real details. */
+import Base from '../../layouts/Base.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Brand from '../../components/Brand.astro';
+import Icon from '../../components/Icon.astro';
+import { url, quoteHref } from '../../site.config';
+
+// What's included each month. TBD: replace with the real list.
+const included = [
+  '[PLACEHOLDER: e.g. sorting each transaction into the right category]',
+  '[PLACEHOLDER: e.g. matching your records to your bank and card statements each month]',
+  '[PLACEHOLDER: e.g. a simple monthly summary of money in, money out, and what’s left]',
+  '[PLACEHOLDER: e.g. a quick check-in to answer your questions]',
+];
+
+// Who it's for. Draft copy.
+const goodFit = [
+  'You run a small business or work for yourself.',
+  'You’d rather spend your time on your work than on spreadsheets.',
+  'You’re not quite sure where your money goes each month.',
+  'Tax time feels like a scramble every year.',
+];
+
+// How it works, step by step. TBD: confirm the real process.
+const steps = [
+  { icon: 'chat', title: 'Tell me about your business', text: 'Fill out the short quote questionnaire. It takes about two minutes.' },
+  { icon: 'user', title: 'We chat', text: '[PLACEHOLDER: e.g. a short call to talk through what you need and answer questions.]' },
+  { icon: 'box', title: 'Get set up', text: '[PLACEHOLDER: e.g. what access or documents Franccesca needs to get started.]' },
+  { icon: 'calendar', title: 'Your books, every month', text: '[PLACEHOLDER: e.g. what happens each month and when you hear from her.]' },
+] as const;
+---
+<Base
+  title="Services"
+  description="Monthly bookkeeping for small business owners, with tax help coming soon. Contact for a quote."
+>
+  <PageIntro eyebrow="Services" title="Bookkeeping that keeps you <em>in the loop</em>, without the headache.">
+    <p class="lede draft">Right now I offer one thing, and I do it carefully: monthly bookkeeping. Tax help is on the way.</p>
+  </PageIntro>
+
+  <!-- ============ MONTHLY BOOKKEEPING ============ -->
+  <section class="section" aria-labelledby="monthly-title">
+    <div class="wrap">
+      <div class="feature" data-reveal="scale">
+        <div class="feature__main">
+          <span class="badge badge--soft">Available now</span>
+          <h2 id="monthly-title" class="press">Monthly <em>bookkeeping</em></h2>
+          <p class="lede draft">
+            Each month I keep your records tidy and up to date, so you always have a clear picture
+            of your business and nothing piles up.
+          </p>
+          <h3>A good fit if…</h3>
+          <ul class="ticks">
+            {goodFit.map((item) => <li class="draft"><Icon name="check" />{item}</li>)}
+          </ul>
+        </div>
+        <div class="feature__side on-dark">
+          <Brand name="branch" class="feature__branch" />
+          <h3>What’s included</h3>
+          <ul class="included">
+            {included.map((item, i) => (
+              <li class={item.startsWith('[') ? 'ph' : 'draft'}><span class="included__n">{String(i + 1).padStart(2, '0')}</span>{item}</li>
+            ))}
+          </ul>
+          <a class="btn btn--primary" href={url(quoteHref)}>Get a quote <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <section class="section section--paper" aria-labelledby="how-title">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">How it works</p>
+        <h2 id="how-title" class="press">Four simple <em>steps</em></h2>
+      </div>
+      <ol class="steps" data-reveal="fade">
+        {steps.map((s, i) => (
+          <li style={`--i:${i}`}>
+            <span class="steps__node"><Icon name={s.icon} /></span>
+            <span class="steps__n">Step {i + 1}</span>
+            <h3>{s.title}</h3>
+            <p class={s.text.startsWith('[') ? 'ph' : 'draft'}>{s.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ TAXES + PRICING ============ -->
+  <section class="section" aria-labelledby="tax-title">
+    <div class="wrap two-col">
+      <article class="card soon" data-reveal>
+        <div class="soon__sprout" aria-hidden="true">
+          <svg viewBox="0 0 120 120">
+            <path class="soon__soil" d="M18 100 Q60 88 102 100" />
+            <path class="soon__stem" d="M60 98 C60 80 60 66 60 50" />
+            <path class="soon__leaf soon__leaf--l" d="M60 70 C 44 70 34 60 32 46 C 48 46 58 56 60 70 Z" />
+            <path class="soon__leaf soon__leaf--r" d="M60 58 C 74 58 86 48 88 32 C 72 32 62 42 60 58 Z" />
+          </svg>
+        </div>
+        <span class="badge">Coming soon</span>
+        <h2 id="tax-title">Tax <em>help</em></h2>
+        <p class="draft">
+          I’m working on adding tax services. If you’d like to hear when they launch, let me know.
+          It only takes a tick on the quote form.
+        </p>
+        <a class="text-link" href={url(`${quoteHref}?tax=yes`)}>Keep me posted</a>
+      </article>
+
+      <!-- ============ PRICING ============ -->
+      <article class="card pricing" data-reveal style="--d:1">
+        <Brand name="emblem" class="pricing__seal emboss" />
+        <span class="badge badge--soft">Pricing</span>
+        <h2>Priced for <em>your</em> business</h2>
+        <p class="draft">
+          Every business is a little different, so I don’t use a one-size price list. Your quote
+          depends on things like how many transactions you have and how your records look today.
+        </p>
+        <a class="btn btn--primary" href={url(quoteHref)}>Contact for a quote <span class="arrow" aria-hidden="true">→</span></a>
+      </article>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  /* ---------- Feature card ---------- */
+  .feature {
+    display: grid;
+    border-radius: clamp(1.25rem, 3vw, 2rem);
+    overflow: hidden;
+    background: var(--tb-paper);
+    box-shadow: var(--shadow-lift);
+  }
+  @media (min-width: 58rem) { .feature { grid-template-columns: 1.25fr 1fr; } }
+  .feature__main { padding: clamp(2rem, 5vw, 3.75rem); }
+  .feature__main .badge { margin-bottom: 1.25rem; }
+  .feature__main h3 { margin-top: 2rem; }
+  .ticks { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.8rem; }
+  .ticks li { display: flex; gap: 0.75rem; align-items: flex-start; }
+  .ticks :global(.icon) {
+    width: 1.4rem;
+    height: 1.4rem;
+    padding: 0.2rem;
+    margin-top: 0.15rem;
+    border-radius: 50%;
+    background: rgb(87 82 56 / 0.14);
+    color: var(--tb-olive);
+    stroke-width: 2.2;
+  }
+
+  .feature__side {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(2rem, 5vw, 3.75rem);
+    background: var(--tb-navy);
+    color: var(--tb-cream);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .feature__side :global(.feature__branch) {
+    position: absolute;
+    width: 22rem;
+    right: -7rem;
+    bottom: -3rem;
+    color: var(--tb-slate);
+    opacity: 0.35;
+    rotate: -20deg;
+  }
+  .included { position: relative; list-style: none; margin: 0.5rem 0 2rem; padding: 0; display: grid; gap: 0; }
+  .included li {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgb(156 165 176 / 0.25);
+  }
+  .included__n {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-style: normal;
+    line-height: 1.1;
+    color: var(--tb-mist);
+  }
+  .feature__side .btn { margin-top: auto; position: relative; }
+
+  /* ---------- Steps timeline ---------- */
+  .steps {
+    --line: 2px;
+    position: relative;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 2.5rem;
+  }
+  /* the connecting line, which draws itself in */
+  .steps::before {
+    content: '';
+    position: absolute;
+    left: 1.75rem;
+    top: 1.75rem;
+    bottom: 1.75rem;
+    width: var(--line);
+    background: linear-gradient(var(--tb-olive), var(--tb-mist));
+    transform-origin: top;
+    transition: transform 1.6s var(--ease);
+  }
+  :global(.reveal-on) .steps:not(.is-in)::before { transform: scaleY(0); }
+  .steps li { position: relative; padding-left: 5rem; }
+  .steps__node {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: grid;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background: var(--tb-cream);
+    color: var(--tb-olive);
+    box-shadow: 0 0 0 6px var(--tb-paper), var(--shadow-soft);
+    transition: transform 0.6s var(--ease), background-color 0.6s, color 0.6s;
+    transition-delay: calc(0.3s + var(--i) * 0.25s);
+  }
+  :global(.reveal-on) .steps:not(.is-in) .steps__node { transform: scale(0.4); }
+  .steps.is-in .steps__node, :global(html:not(.reveal-on)) .steps__node { background: var(--tb-navy); color: var(--tb-cream); }
+  .steps__n { display: block; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--tb-olive); margin: 0.2rem 0 0.4rem; }
+  .steps h3 { margin-bottom: 0.4rem; }
+  .steps p { margin: 0; color: var(--tb-slate); }
+  @media (min-width: 60rem) {
+    .steps { grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+    .steps::before {
+      left: 1.75rem;
+      right: 1.75rem;
+      top: 1.75rem;
+      bottom: auto;
+      width: auto;
+      height: var(--line);
+      background: linear-gradient(90deg, var(--tb-olive), var(--tb-mist));
+      transform-origin: left;
+    }
+    :global(.reveal-on) .steps:not(.is-in)::before { transform: scaleX(0); }
+    .steps li { padding-left: 0; padding-top: 5rem; }
+  }
+
+  /* ---------- Taxes + pricing ---------- */
+  .two-col { display: grid; gap: 1.5rem; }
+  @media (min-width: 52rem) { .two-col { grid-template-columns: 1fr 1fr; } }
+  .two-col .card { display: flex; flex-direction: column; align-items: flex-start; }
+  .two-col h2 { font-size: clamp(2rem, 4vw, 2.6rem); margin-top: 1rem; }
+  .two-col .text-link, .two-col .btn { margin-top: auto; }
+
+  .soon { background: transparent; border: 1.5px dashed var(--tb-line); box-shadow: none; }
+  .soon__sprout { position: absolute; right: 1.5rem; top: 1.25rem; width: 6.5rem; }
+  .soon__sprout svg { overflow: visible; }
+  .soon__soil { fill: none; stroke: var(--tb-mist); stroke-width: 2; stroke-linecap: round; }
+  .soon__stem { fill: none; stroke: var(--tb-olive); stroke-width: 2.4; stroke-linecap: round; stroke-dasharray: 60; animation: grow-stem 2.4s var(--ease) both 0.3s; }
+  .soon__leaf { fill: var(--tb-olive); opacity: 0.85; transform-box: fill-box; animation: grow-leaf 1.4s var(--ease) both; }
+  .soon__leaf--l { transform-origin: 100% 100%; animation-delay: 1.4s; }
+  .soon__leaf--r { transform-origin: 0% 100%; animation-delay: 1.8s; }
+  @keyframes grow-stem { from { stroke-dashoffset: 60; } to { stroke-dashoffset: 0; } }
+  @keyframes grow-leaf { from { scale: 0; } }
+
+  .pricing { overflow: hidden; }
+  .pricing :global(.pricing__seal) {
+    position: absolute;
+    right: 1.5rem;
+    top: 1.25rem;
+    width: 5rem;
+    color: #EFECE4;
+  }
+</style>

@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import PageIntro from '../components/PageIntro.astro';
+import { url, quoteHref } from '../site.config';
+---
+<Base title="Page not found" description="Sorry, that page couldn’t be found." noindex>
+  <PageIntro eyebrow="Page not found" title="Hmm, that page has <em>wandered off</em>." draftTitle={false}>
+    <p class="lede">The link may be old, or the address may have a typo. These might help:</p>
+    <p class="links">
+      <a class="btn btn--primary" href={url()}>Go to the home page</a>
+      <a class="btn btn--ghost" href={url(quoteHref)}>Get a quote</a>
+    </p>
+  </PageIntro>
+</Base>
+
+<style>
+  .links { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
+</style>

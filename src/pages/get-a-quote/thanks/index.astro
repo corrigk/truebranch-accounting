@@ -1,0 +1,12 @@
+---
+/* Shown after submitting the quote form when JavaScript is off. */
+import Base from '../../../layouts/Base.astro';
+import PageIntro from '../../../components/PageIntro.astro';
+import { site, url } from '../../../site.config';
+---
+<Base title="Thank you" description="Your quote request has been sent." noindex>
+  <PageIntro eyebrow="Message sent" title="Thank <em>you</em>!" draftTitle={false}>
+    <p class="lede draft">Your answers are on their way to me. I’ll be in touch within {site.responseTime}.</p>
+    <p><a class="text-link" href={url()}>Back to the home page</a></p>
+  </PageIntro>
+</Base>
