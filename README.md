@@ -35,9 +35,13 @@ The quote form links can pre-fill answers, e.g. `get-a-quote/?stress=taxes,mixin
 
 All motion respects the visitor's reduced-motion setting, and every interactive piece still works without JavaScript.
 
-## Deploying
+## Deploying (GitHub Pages)
 
-- **Netlify:** build command `npm run build`, publish directory `dist`.
-- **GitHub Pages (project site):** build with `BASE_PATH=/<repo-name>` so links work under the sub-path.
-- Once the domain exists, also set `SITE_URL=https://yourdomain.com`. This turns on canonical URLs, the link-preview image, and `sitemap-index.xml` (linked from `robots.txt`).
+Every push to `main` builds and publishes the site through `.github/workflows/deploy.yml`.
+One-time setup: repo **Settings → Pages → Source: GitHub Actions**.
+
+- Preview address: https://corrigk.github.io/truebranch-accounting/
+- With a custom domain: set `SITE_URL` to the domain and delete `BASE_PATH` in the workflow file, then add the domain under Settings → Pages.
+- `SITE_URL` turns on canonical URLs, the link-preview image, and `sitemap-index.xml`.
 - Fonts are self-hosted from npm packages, so there are no Google Fonts requests.
+- At launch, set `previewMode: false` in `src/site.config.ts` so search engines can list the site.
