@@ -26,7 +26,7 @@ const values = [
 ---
 <Base
   title="About"
-  description="Meet Franccesca Thomas, the bookkeeper behind TrueBranch Accounting."
+  description="Meet Franccesca Thomas, the Pewaukee, WI bookkeeper behind TrueBranch Accounting."
 >
   <PageIntro eyebrow="About" title={`Hi, I’m <em>${site.ownerFirstName}</em>.`} draftTitle={false}>
     <p class="lede draft">I help small business owners feel calm and clear about their money.</p>
@@ -44,12 +44,21 @@ const values = [
       <div class="about__story">
         <p class="eyebrow" data-reveal>My story</p>
         <h2 id="story-title" class="press" data-reveal style="--d:1">Why I do <em>this work</em></h2>
+        <!-- Franccesca's own words, from her notes. -->
         <div data-reveal style="--d:2">
-          <p class="ph">[PLACEHOLDER: how Franccesca got into bookkeeping.]</p>
-          <p class="ph">[PLACEHOLDER: why she started TrueBranch, and what she loves about helping small business owners.]</p>
-          <p class="ph">[PLACEHOLDER: something personal, e.g. where she’s based, family, what she does outside work.]</p>
-          <p class="ph">[PLACEHOLDER: if her husband is part of the business, a line about his role. Otherwise delete.]</p>
+          <p class="lede">
+            Based in Pewaukee, WI, I started TrueBranch to support a friend as they launched their own
+            businesses. Along the way, I discovered a passion for helping small business owners find
+            financial clarity and peace of mind through bookkeeping.
+          </p>
+          <p>
+            As a business owner myself, I understand the time, effort, and heart that go into building
+            and growing a business. That’s why I love supporting small and new business owners with
+            reliable bookkeeping, giving them the confidence and information they need to focus on
+            growing their businesses!
+          </p>
         </div>
+        <p class="cred" data-reveal style="--d:3"><Icon name="shield" /> {site.certification}, working in QuickBooks Online</p>
         <div class="signoff" data-reveal style="--d:3">
           <Brand name="emblem" class="signoff__seal" />
           <div>
@@ -113,6 +122,18 @@ const values = [
   }
 
   .about__story { padding-top: 1rem; }
+  .cred {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    background: var(--tb-navy);
+    color: var(--tb-cream);
+    font-size: 0.92rem;
+    font-weight: 600;
+  }
+  .cred :global(.icon) { width: 1.1rem; height: 1.1rem; }
   .signoff {
     display: flex;
     align-items: center;

@@ -1,0 +1,97 @@
+---
+/* REVIEW TOOL: color theme picker (thin bar at the very top).
+   Lets Franccesca flip between the color themes in styles/themes.css.
+   Her choice is remembered in her browser only. Add ?theme=bold (or
+   classic / olive / dusty) to a link to open it in that theme.
+
+   Once a theme is chosen: set `theme` in site.config.ts to it and
+   `showThemePicker: false` to remove this bar. */
+const themes = [
+  { id: 'classic', name: 'Minimal', swatches: ['#EAE7DF', '#F4F2EC', '#21313F'] },
+  { id: 'olive', name: 'Olive Grove', swatches: ['#E3DFC9', '#575238', '#383A28'] },
+  { id: 'dusty', name: 'Dusty Blue', swatches: ['#D9DEE2', '#9CA5B0', '#586572'] },
+  { id: 'bold', name: 'Bold & Earthy', swatches: ['#383A28', '#21313F', '#575238'] },
+];
+---
+<div class="theme-bar" role="region" aria-label="Color theme preview">
+  <div class="wrap theme-bar__inner">
+    <span class="theme-bar__label">Theme</span>
+    <div class="theme-bar__options" role="group" aria-label="Color theme">
+      {themes.map((t) => (
+        <button type="button" class="theme-bar__btn" data-theme-id={t.id} aria-pressed="false">
+          <span class="theme-bar__dots" aria-hidden="true">
+            {t.swatches.map((c) => <span style={`background:${c}`}></span>)}
+          </span>
+          {t.name}
+        </button>
+      ))}
+    </div>
+  </div>
+</div>
+
+<script>
+  const html = document.documentElement;
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>('.theme-bar__btn')];
+  const mark = () => buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.themeId === html.dataset.theme)));
+  buttons.forEach((b) =>
+    b.addEventListener('click', () => {
+      html.dataset.theme = b.dataset.themeId!;
+      try { localStorage.setItem('tb-theme', b.dataset.themeId!); } catch {}
+      mark();
+    }),
+  );
+  mark();
+</script>
+
+<style>
+  .theme-bar {
+    position: relative;
+    z-index: 110;
+    background: #fff;
+    border-bottom: 1px solid #DEDCD5;
+    font-size: 0.82rem;
+    color: #21313F;
+  }
+  .theme-bar__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 1rem;
+    padding-block: 0.45rem;
+  }
+  .theme-bar__label { font-weight: 600; letter-spacing: 0.04em; color: #586572; }
+  .theme-bar__options { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .theme-bar__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 2rem;
+    padding: 0.2rem 0.7rem 0.2rem 0.4rem;
+    border: 1.5px solid #DEDCD5;
+    border-radius: 999px;
+    background: #fff;
+    color: #21313F;
+    font: 600 0.8rem var(--font-body);
+    cursor: pointer;
+  }
+  .theme-bar__btn:hover { border-color: #9CA5B0; }
+  .theme-bar__btn[aria-pressed='true'] { border-color: #21313F; background: #F4F2EC; }
+  .theme-bar__dots { display: inline-flex; }
+  .theme-bar__dots span {
+    width: 0.85rem;
+    height: 0.85rem;
+    border-radius: 50%;
+    border: 1.5px solid #fff;
+    margin-left: -0.3rem;
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 0.08);
+  }
+  .theme-bar__dots span:first-child { margin-left: 0; }
+  /* Phones: one swipeable row */
+  @media (max-width: 40rem) {
+    .theme-bar__inner { flex-wrap: nowrap; padding-inline: 0.75rem 0; }
+    .theme-bar__label { flex-shrink: 0; font-size: 0.75rem; }
+    .theme-bar__options { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-right: 0.75rem; }
+    .theme-bar__options::-webkit-scrollbar { display: none; }
+    .theme-bar__btn { flex-shrink: 0; }
+  }
+</style>

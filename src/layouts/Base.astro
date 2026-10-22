@@ -7,6 +7,8 @@ import '@fontsource/cormorant-garamond/latin-400-italic.css';
 import '@fontsource/cormorant-garamond/latin-500.css';
 import '@fontsource-variable/source-sans-3/wght.css';
 import '../styles/global.css';
+import '../styles/themes.css';
+import ThemePicker from '../components/ThemePicker.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import EditLabels from '../components/EditLabels.astro';
@@ -41,7 +43,7 @@ const localBusiness = site.city
   : null;
 ---
 <!doctype html>
-<html lang="en" data-drafts={site.showDraftMarkers ? '' : undefined}>
+<html lang="en" data-theme={site.theme} data-drafts={site.showDraftMarkers ? '' : undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -66,6 +68,21 @@ const localBusiness = site.city
     <link rel="apple-touch-icon" href={url('apple-touch-icon.png')} />
     <meta name="theme-color" content="#EAE7DF" />
 
+    {site.showThemePicker && (
+      <!-- Theme preview: apply a chosen theme (?theme=… or remembered choice) before the page paints. -->
+      <script is:inline>
+        (function () {
+          var ok = ['classic', 'olive', 'dusty', 'bold'];
+          var t = new URLSearchParams(location.search).get('theme');
+          try {
+            if (ok.indexOf(t) > -1) localStorage.setItem('tb-theme', t);
+            else t = localStorage.getItem('tb-theme');
+          } catch (e) {}
+          if (ok.indexOf(t) > -1) document.documentElement.dataset.theme = t;
+        })();
+      </script>
+    )}
+
     <!-- Turn on scroll-reveal animations only when JS runs and motion is welcome. -->
     <script is:inline>
       if ('IntersectionObserver' in window && matchMedia('(prefers-reduced-motion: no-preference)').matches) {
@@ -82,6 +99,7 @@ const localBusiness = site.city
         <p><strong>Draft preview.</strong> Dashed outlines mark draft copy awaiting Franccesca’s approval. [Brackets] mark placeholders.</p>
       </aside>
     )}
+    {site.showThemePicker && <ThemePicker />}
     <Header />
     <main id="main">
       <slot />

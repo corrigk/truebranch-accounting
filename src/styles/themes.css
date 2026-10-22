@@ -1,0 +1,154 @@
+/* =====================================================================
+   COLOR THEMES — from minimal to bold, all built from the brand palette.
+
+   The active theme is set on <html data-theme="…">:
+     classic  Minimal: cream, lots of white space (the original look)
+     olive    Olive Grove: warm olive tints and color boxes, forest buttons
+     dusty    Dusty Blue: cool slate and mist tints, slate buttons
+     bold     Bold & Earthy: dark forest and navy bands, strong color boxes
+
+   Pick the default in site.config.ts (`theme`). While `showThemePicker`
+   is on, visitors can switch themes from the bar at the top of the page.
+
+   How dark areas work: the "band" classes below re-map the brand color
+   variables (text becomes cream, backgrounds become forest or navy), so
+   everything inside a band flips to light-on-dark automatically.
+   ===================================================================== */
+
+/* ---------- Dark bands (used by the Bold theme and the Premium package) ---------- */
+.band-forest,
+.band-navy,
+html[data-theme='bold'] .section--paper,
+html[data-theme='bold'] .benefit:nth-child(1),
+html[data-theme='bold'] .benefit:nth-child(2),
+html[data-theme='bold'] .value:nth-child(2) {
+  --tb-navy:  #EAE7DF;              /* text becomes cream */
+  --tb-slate: #D2D3CC;              /* softer text, still AA on the dark bg */
+  --tb-olive: #C9C39C;              /* accents become a light olive */
+  --tb-mist:  #9CA5B0;
+  --tb-line:  rgb(234 231 223 / 0.2);
+  --tb-sun:   rgb(255 255 255 / 0.05);
+  --tb-shade: 0 0 0;
+  background: var(--tb-cream);      /* the band color, set below */
+  color: var(--tb-navy);
+}
+.band-forest,
+html[data-theme='bold'] .section--paper,
+html[data-theme='bold'] .benefit:nth-child(2) {
+  --tb-cream:  #383A28;
+  --tb-paper:  #44462F;
+  --tb-white:  #4E5039;
+  --tb-forest: #21313F;
+}
+.band-navy,
+html[data-theme='bold'] .section--paper:nth-of-type(even),
+html[data-theme='bold'] .benefit:nth-child(1),
+html[data-theme='bold'] .value:nth-child(2) {
+  --tb-cream:  #21313F;
+  --tb-paper:  #2B3D4D;
+  --tb-white:  #344859;
+  --tb-forest: #383A28;
+}
+:is(.band-forest, .band-navy, html[data-theme='bold'] .section--paper) .press { text-shadow: none; }
+
+/* Tinted backgrounds are a little darker than cream, so secondary text uses a
+   deeper slate there to keep WCAG AA contrast (4.5:1). */
+html:is([data-theme='olive'], [data-theme='dusty'], [data-theme='bold']) { --tb-slate: #4A5561; }
+.pkg--tint, .service--growth { --tb-slate: #4A5561; }
+
+/* Buttons on dark panels (closing call-to-action, footer) always stay light,
+   whatever button color a theme uses elsewhere. */
+html[data-theme] .on-dark .btn--primary { --btn-bg: var(--tb-cream); --btn-fg: var(--tb-navy); }
+html[data-theme] .on-dark .btn--primary:hover { --btn-bg: #fff; }
+
+/* A tinted card sitting inside a dark band gets a deep olive instead,
+   so its (now cream) text stays readable. */
+html[data-theme='bold'] .section--paper .service--growth { background: #4A4630; --tb-slate: #D2D3CC; }
+
+/* ---------- Shared "color box" treatment for the non-minimal themes ---------- */
+html:is([data-theme='olive'], [data-theme='dusty'], [data-theme='bold']) .benefit,
+html:is([data-theme='olive'], [data-theme='dusty'], [data-theme='bold']) .value {
+  padding: clamp(1.6rem, 3vw, 2.25rem);
+  border-radius: var(--radius-lg);
+  background: var(--box-1);
+  border: 0;
+  box-shadow: var(--shadow-soft);
+}
+html:is([data-theme='olive'], [data-theme='dusty']) .benefit:nth-child(2),
+html:is([data-theme='olive'], [data-theme='dusty']) .value:nth-child(2) { background: var(--box-2); }
+html:is([data-theme='olive'], [data-theme='dusty']) .benefit:nth-child(3),
+html:is([data-theme='olive'], [data-theme='dusty']) .value:nth-child(3) { background: var(--box-3); }
+html:is([data-theme='olive'], [data-theme='dusty'], [data-theme='bold']) .benefit p,
+html:is([data-theme='olive'], [data-theme='dusty'], [data-theme='bold']) .value p { color: var(--tb-slate); }
+
+/* =====================================================================
+   OLIVE GROVE
+   ===================================================================== */
+html[data-theme='olive'] {
+  --tb-paper: #FBFAF5;
+  --box-1: #DEDAC2;
+  --box-2: #D5DADC;
+  --box-3: #EAE1CF;
+}
+html[data-theme='olive'] .section--paper { background: #E3DFC9; }
+html[data-theme='olive'] .btn--primary { --btn-bg: var(--tb-forest); }
+html[data-theme='olive'] .btn--primary:hover { --btn-bg: var(--tb-olive); }
+html[data-theme='olive'] .icon-bubble { background: var(--tb-olive); color: var(--tb-cream); box-shadow: none; }
+html[data-theme='olive'] .ribbon { background: var(--tb-forest); }
+html[data-theme='olive'] .eyebrow { color: var(--tb-forest); }
+html[data-theme='olive'] .card--lift { border-top: 4px solid var(--tb-olive); }
+html[data-theme='olive'] .hero__light,
+html[data-theme='olive'] .page-intro__light {
+  background:
+    radial-gradient(70rem 36rem at 88% 8%, #FBF3DC, transparent 62%),
+    radial-gradient(40rem 26rem at 5% 95%, rgb(87 82 56 / 0.18), transparent 70%);
+}
+
+/* =====================================================================
+   DUSTY BLUE
+   ===================================================================== */
+html[data-theme='dusty'] {
+  --tb-paper: #FAFAF8;
+  --box-1: #D6DCE1;
+  --box-2: #E4E0D4;
+  --box-3: #CFD5DB;
+}
+html[data-theme='dusty'] .section--paper { background: #D9DEE2; }
+html[data-theme='dusty'] .btn--primary { --btn-bg: var(--tb-slate); }
+html[data-theme='dusty'] .btn--primary:hover { --btn-bg: var(--tb-navy); }
+html[data-theme='dusty'] .icon-bubble { background: var(--tb-slate); color: var(--tb-cream); box-shadow: none; }
+html[data-theme='dusty'] .ribbon { background: var(--tb-slate); }
+html[data-theme='dusty'] .eyebrow { color: var(--tb-slate); }
+html[data-theme='dusty'] h1 em,
+html[data-theme='dusty'] h2 em { color: var(--tb-slate); }
+html[data-theme='dusty'] .card--lift { border-top: 4px solid var(--tb-mist); }
+html[data-theme='dusty'] .cta-band__panel { background: var(--tb-navy); }
+html[data-theme='dusty'] .hero__light,
+html[data-theme='dusty'] .page-intro__light {
+  background:
+    radial-gradient(70rem 36rem at 88% 8%, #F3F4F2, transparent 62%),
+    radial-gradient(40rem 26rem at 5% 95%, rgb(88 101 114 / 0.22), transparent 70%);
+}
+
+/* =====================================================================
+   BOLD & EARTHY
+   ===================================================================== */
+html[data-theme='bold'] {
+  --box-1: var(--tb-cream);
+}
+html[data-theme='bold'] .ribbon { background: var(--tb-olive); }
+html[data-theme='bold'] .cta-band__panel { background: var(--tb-olive); }
+html[data-theme='bold'] .btn--primary { --btn-bg: var(--tb-forest); }
+html[data-theme='bold'] .icon-bubble { background: var(--tb-olive); color: var(--tb-cream); box-shadow: none; }
+html[data-theme='bold'] .benefit:nth-child(3) { background: #DCD8C2; }
+/* About-page values sit inside a dark band: keep them on band surfaces. */
+html[data-theme='bold'] .value:nth-child(1),
+html[data-theme='bold'] .value:nth-child(3) { background: var(--tb-paper); }
+/* Self-check counter, when its panel flips to cream inside a band */
+html[data-theme='bold'] .section--paper .check__count { color: #4A5561; }
+html[data-theme='bold'] .card--lift { border-top: 5px solid var(--tb-olive); }
+html[data-theme='bold'] .hero__light {
+  background:
+    radial-gradient(70rem 36rem at 88% 8%, #FBF1D6, transparent 60%),
+    radial-gradient(50rem 30rem at 0% 100%, rgb(56 58 40 / 0.22), transparent 70%);
+}

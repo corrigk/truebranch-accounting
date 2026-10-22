@@ -31,7 +31,7 @@ const rel = Astro.url.pathname.startsWith(base) ? Astro.url.pathname.slice(base.
 const key = rel.replace(/^\//, '').replace(/index\.html$/, '');
 const pageCode = pages[key] ?? pages[key + '/'] ?? 'E';
 ---
-<div class="em" data-page-code={pageCode}>
+<aside class="em" data-page-code={pageCode} aria-label="Edit labels review tool">
   <button type="button" class="em-toggle" aria-pressed="false">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-4-4L4 16z" /><path d="m13.5 6.5 4 4" /></svg>
     <span class="em-toggle__label">Edit labels</span>
@@ -44,7 +44,7 @@ const pageCode = pages[key] ?? pages[key + '/'] ?? 'E';
   </div>
   <div class="em-layer" hidden></div>
   <p class="em-toast" role="status" aria-live="polite"></p>
-</div>
+</aside>
 
 <script>
   const root = document.querySelector<HTMLElement>('.em');
@@ -66,7 +66,7 @@ const pageCode = pages[key] ?? pages[key + '/'] ?? 'E';
       ['B', 'a, button'],
       ['W', 'p, li, blockquote, figcaption, label, .badge, .ribbon__item'],
     ];
-    const SKIP = '.em, .leaf-shadow, .skip-link, [aria-hidden="true"] .ribbon__set:not(:first-child), .ribbon__set + .ribbon__set, .nav-toggle, .visually-hidden';
+    const SKIP = '.em, .theme-bar, .leaf-shadow, .skip-link, [aria-hidden="true"] .ribbon__set:not(:first-child), .ribbon__set + .ribbon__set, .nav-toggle, .visually-hidden';
 
     type Item = { el: Element; code: string; tag: HTMLButtonElement };
     let items: Item[] = [];
@@ -250,7 +250,7 @@ const pageCode = pages[key] ?? pages[key + '/'] ?? 'E';
     cursor: pointer;
   }
   .em-toggle svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-  .em-toggle[aria-pressed='true'] { background: #B5532E; }
+  .em-toggle[aria-pressed='true'] { background: #9A4425; }
 
   .em-legend {
     position: fixed;

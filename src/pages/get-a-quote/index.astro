@@ -24,6 +24,15 @@ const businessTypes = [
   'Food, hospitality or events',
   'Trades or home services',
 ];
+const legalStructures = [
+  'Sole proprietor',
+  'Single-member LLC',
+  'Multi-member LLC',
+  'Partnership',
+  'S-corp',
+  'C-corp',
+  'Not sure yet',
+];
 const tracking = ['A spreadsheet', 'An app or software', 'A shoebox of receipts', 'Not really, yet'];
 const confidence = ['Not at all', 'Somewhat', 'Pretty confident'];
 // Checkboxes. Each gets its own field name so the email lists them clearly.
@@ -34,13 +43,14 @@ const stresses = [
   { name: 'stress_mixing', label: 'Mixing personal and business money' },
   { name: 'stress_other', label: 'Something else' },
 ];
-const volume = ['A few', 'Dozens', 'Hundreds', 'Not sure'];
+const volume = ['A few', 'Under 25', 'Under 75', 'Under 100', '100 or more', 'Not sure'];
 const taxInterest = ['Yes', 'Maybe later', 'No'];
 const contactPrefs = ['Email', 'Phone call', 'Text message'];
 
 // Encouraging notes shown above each step in the guided version.
 const cheers = [
   'Let’s start easy.',
+  'Not sure? That’s completely fine.',
   'Great. No judgment here, ever.',
   'Honest answers help the most.',
   'Pick as many as you like.',
@@ -51,7 +61,7 @@ const cheers = [
 ];
 // Leaf positions on the progress branch: [x, y, rotation]
 const leaves: [number, number, number][] = [
-  [22, 33, -40], [46, 31, 34], [72, 27, -38], [98, 24, 32], [124, 20, -36], [150, 16, 30], [176, 12, -32], [204, 8, 26],
+  [18, 34, -40], [40, 32, 34], [62, 29, -38], [86, 26, 32], [110, 22, -36], [134, 19, 30], [158, 15, -32], [182, 11, 28], [206, 7, -26],
 ];
 
 // No-JS fallback: after submitting, Web3Forms redirects here.
@@ -117,14 +127,21 @@ const thanksUrl = Astro.site ? new URL(url('get-a-quote/thanks/'), Astro.site).h
             </fieldset>
 
             <fieldset class="step" data-auto>
-              <legend><span class="q-num">2</span> How are you tracking your money today?</legend>
+              <legend><span class="q-num">2</span> How is your business set up? <span class="hint">Your legal structure.</span></legend>
+              <div class="choices">
+                {legalStructures.map((t) => <label class="choice"><input type="radio" name="legal_structure" value={t} /> <span>{t}</span></label>)}
+              </div>
+            </fieldset>
+
+            <fieldset class="step" data-auto>
+              <legend><span class="q-num">3</span> How are you tracking your money today?</legend>
               <div class="choices">
                 {tracking.map((t) => <label class="choice"><input type="radio" name="tracking" value={t} /> <span>{t}</span></label>)}
               </div>
             </fieldset>
 
             <fieldset class="step" data-auto>
-              <legend><span class="q-num">3</span> How confident do you feel about your numbers right now?</legend>
+              <legend><span class="q-num">4</span> How confident do you feel about your numbers right now?</legend>
               <div class="choices choices--row choices--mood">
                 {confidence.map((t, i) => (
                   <label class="choice choice--mood">
@@ -137,28 +154,28 @@ const thanksUrl = Astro.site ? new URL(url('get-a-quote/thanks/'), Astro.site).h
             </fieldset>
 
             <fieldset class="step">
-              <legend><span class="q-num">4</span> What’s stressing you most? <span class="hint">Pick any that apply.</span></legend>
+              <legend><span class="q-num">5</span> What’s stressing you most? <span class="hint">Pick any that apply.</span></legend>
               <div class="choices">
                 {stresses.map((s) => <label class="choice"><input type="checkbox" name={s.name} value="Yes" /> <span>{s.label}</span></label>)}
               </div>
             </fieldset>
 
             <fieldset class="step" data-auto>
-              <legend><span class="q-num">5</span> Roughly how many transactions a month? <span class="hint">Sales, purchases, bills and payments all count.</span></legend>
+              <legend><span class="q-num">6</span> Roughly how many transactions a month? <span class="hint">Sales, purchases, bills and payments all count.</span></legend>
               <div class="choices choices--row">
                 {volume.map((t) => <label class="choice"><input type="radio" name="monthly_transactions" value={t} /> <span>{t}</span></label>)}
               </div>
             </fieldset>
 
             <fieldset class="step" data-auto>
-              <legend><span class="q-num">6</span> Are you also interested in help with taxes? <span class="hint">Tax services are coming soon.</span></legend>
+              <legend><span class="q-num">7</span> Are you also interested in help with taxes? <span class="hint">Tax services are coming soon.</span></legend>
               <div class="choices choices--row">
                 {taxInterest.map((t) => <label class="choice"><input type="radio" name="tax_interest" value={t} /> <span>{t}</span></label>)}
               </div>
             </fieldset>
 
             <fieldset class="step">
-              <legend><span class="q-num">7</span> Anything else you’d like me to know? <span class="hint">Optional</span></legend>
+              <legend><span class="q-num">8</span> Anything else you’d like me to know? <span class="hint">Optional</span></legend>
               <label class="field">
                 <span class="visually-hidden">Anything else you’d like me to know</span>
                 <textarea name="message" rows="5" maxlength="2000" placeholder="Questions, worries, what you’re hoping for…"></textarea>
@@ -166,11 +183,15 @@ const thanksUrl = Astro.site ? new URL(url('get-a-quote/thanks/'), Astro.site).h
             </fieldset>
 
             <fieldset class="step">
-              <legend><span class="q-num">8</span> How can I reach you?</legend>
+              <legend><span class="q-num">9</span> How can I reach you?</legend>
               <div class="field-grid">
                 <label class="field">
                   <span>Name <abbr title="required" aria-hidden="true">*</abbr></span>
                   <input type="text" name="name" required autocomplete="name" maxlength="120" />
+                </label>
+                <label class="field">
+                  <span>Business name (optional)</span>
+                  <input type="text" name="business_name" autocomplete="organization" maxlength="160" />
                 </label>
                 <label class="field">
                   <span>Email <abbr title="required" aria-hidden="true">*</abbr></span>
@@ -185,6 +206,9 @@ const thanksUrl = Astro.site ? new URL(url('get-a-quote/thanks/'), Astro.site).h
               <div class="choices choices--row" role="radiogroup" aria-labelledby="pref-label">
                 {contactPrefs.map((t, i) => <label class="choice"><input type="radio" name="contact_preference" value={t} checked={i === 0} /> <span>{t}</span></label>)}
               </div>
+              <!-- Filled in when someone arrives from a package's "Get a quote" button. -->
+              <input type="hidden" name="package_interest" value="" />
+              <p class="package-note" data-package-note hidden></p>
               <p class="required-note"><span aria-hidden="true">*</span> Required</p>
             </fieldset>
 
@@ -262,6 +286,14 @@ const thanksUrl = Astro.site ? new URL(url('get-a-quote/thanks/'), Astro.site).h
     if (params.get('tax') === 'yes') {
       const yes = form.querySelector<HTMLInputElement>('input[name="tax_interest"][value="Yes"]');
       if (yes) yes.checked = true;
+    }
+    const pkgNames: Record<string, string> = { essentials: 'Bookkeeping Essentials', growth: 'Bookkeeping Growth', premium: 'Bookkeeping Premium' };
+    const pkg = pkgNames[params.get('package') || ''];
+    if (pkg) {
+      form.querySelector<HTMLInputElement>('input[name="package_interest"]')!.value = pkg;
+      const note = form.querySelector<HTMLElement>('[data-package-note]')!;
+      note.textContent = `You’re asking about ${pkg}.`;
+      note.hidden = false;
     }
 
     // ---- Guided, one-question-at-a-time mode ----
@@ -539,6 +571,14 @@ const thanksUrl = Astro.site ? new URL(url('get-a-quote/thanks/'), Astro.site).h
   @media (min-width: 36rem) { .field-grid { grid-template-columns: 1fr 1fr; } }
   .sub-legend { font-weight: 600; font-size: 0.95rem; margin: 1.75rem 0 0.7rem; }
   .required-note { font-size: 0.9rem; color: var(--tb-slate); margin: 1.25rem 0 0; }
+  .package-note {
+    margin: 1.5rem 0 0;
+    padding: 0.7rem 1rem;
+    border-radius: 12px;
+    background: rgb(87 82 56 / 0.12);
+    color: var(--tb-olive);
+    font-weight: 600;
+  }
 
   .form__status {
     margin: 1.5rem 0 0;

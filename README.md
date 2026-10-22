@@ -17,6 +17,8 @@ Then open http://localhost:4321.
 | --- | --- |
 | Email, phone, city, response time, form key, social links, draft mode | `src/site.config.ts` |
 | Testimonials | `src/data/testimonials.ts` |
+| Bookkeeping packages, prices, add-ons | `src/data/packages.ts` |
+| Color themes | `src/styles/themes.css` (pick the default with `theme` in `src/site.config.ts`) |
 | Colors, fonts, spacing, shadows | top of `src/styles/global.css` |
 | Logos (wordmark, emblem, branch) | `src/assets/brand/*.svg`, used through `src/components/Brand.astro` |
 | Original brand files (Web RGB PNGs, Branch.svg) | `public/assets/brand/` |
@@ -45,6 +47,18 @@ Draft mode is off. To review copy with Franccesca, set `showDraftMarkers: true` 
 The quote form links can pre-fill answers, e.g. `get-a-quote/?stress=taxes,mixing&tax=yes`. The self-check and the scenario cards use this.
 
 All motion respects the visitor's reduced-motion setting, and every interactive piece still works without JavaScript.
+
+### Color themes (review tool)
+
+While `showThemePicker: true`, a bar at the top of every page switches between four themes built from the brand palette: **Minimal** (classic), **Olive Grove**, **Dusty Blue** and **Bold & Earthy**. Links can open in a theme with `?theme=bold` (or `classic`, `olive`, `dusty`). Once Franccesca picks one, set `theme` in `src/site.config.ts` and `showThemePicker: false`. Themes live in `src/styles/themes.css`.
+
+## Future ideas (not started)
+
+Saved from Franccesca's notes, to do after the look and content are settled:
+
+- **Booking / scheduling**: let people book a call from the site (e.g. an embedded Calendly or similar).
+- **Client login portal**: clients sign in securely and send documents (e.g. via Dropbox or another file service). Needs a backend/database and likely a paid service; she's open to paying for it.
+- **Package prices**: fill in `price` for each package and add-on in `src/data/packages.ts`.
 
 ## Deploying (GitHub Pages)
 

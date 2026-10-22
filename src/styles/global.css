@@ -19,6 +19,7 @@
 
   /* Derived tones */
   --tb-paper:  #F4F2EC; /* lighter cream for cards */
+  --tb-white:  #FFFFFF; /* brightest surface (answer tiles etc.) */
   --tb-sun:    #FBF6EA; /* warm highlight, used for "light" glows */
   --tb-line:   #C9CBC8; /* mist blended into cream, for borders */
   --tb-shade:  33 49 63; /* navy as RGB channels, for shadows */

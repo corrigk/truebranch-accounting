@@ -18,11 +18,14 @@ export const site = {
   // TBD: phone number, e.g. '(555) 555-0100'. Leave '' to hide.
   phone: '',
 
-  // TBD: city / service area, e.g. 'Austin'. Leave '' until known.
-  // When set, the site says "Serving <city> and the surrounding area..."
-  // and adds LocalBusiness structured data for search engines.
-  city: '',
-  region: '', // TBD: state, e.g. 'TX' (used in structured data only)
+  // City / service area. The site says "Serving <city>, <region> and the
+  // surrounding area..." and adds LocalBusiness data for search engines.
+  city: 'Pewaukee',
+  region: 'WI',
+
+  // Credential shown on the site. TBD: confirm the exact title of her
+  // QuickBooks certification (e.g. "QuickBooks Online Certified ProAdvisor").
+  certification: 'QuickBooks Online certified',
 
   // TBD: response-time promise shown next to the quote form.
   responseTime: '1 to 2 business days',
@@ -44,6 +47,14 @@ export const site = {
   // is a work in progress. Set to false when you launch.
   previewMode: true,
 
+  // COLOR THEME: 'classic' (minimal) | 'olive' | 'dusty' | 'bold'.
+  // See src/styles/themes.css for what each one looks like.
+  theme: 'classic' as 'classic' | 'olive' | 'dusty' | 'bold',
+
+  // REVIEW TOOL: shows a bar at the top of every page for switching color
+  // themes, so Franccesca can compare them. Set to false once one is chosen.
+  showThemePicker: true,
+
   // REVIEW TOOL: shows the "Edit labels" button (bottom-left) that tags every
   // title, text, picture and button with a code like "H3-T1", so feedback
   // can point at exact spots. Set to false before launch.
@@ -57,7 +68,7 @@ export const site = {
 /** "Serving [city] and the surrounding area, and working with clients remotely." */
 export function serviceArea(): string {
   return site.city
-    ? `Serving ${site.city} and the surrounding area, and working with clients remotely.`
+    ? `Serving ${site.city}${site.region ? `, ${site.region}` : ''} and the surrounding area, and working with clients remotely.`
     : 'Serving [PLACEHOLDER: city] and the surrounding area, and working with clients remotely.';
 }
 
