@@ -9,6 +9,7 @@ import '@fontsource-variable/source-sans-3/wght.css';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import EditLabels from '../components/EditLabels.astro';
 import { site, url } from '../site.config';
 
 interface Props {
@@ -86,6 +87,7 @@ const localBusiness = site.city
       <slot />
     </main>
     <Footer />
+    {site.showEditToggle && <EditLabels />}
 
     <script>
       // Scroll reveal: fade elements with [data-reveal] in as they come into view.

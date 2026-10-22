@@ -1,0 +1,328 @@
+---
+/* REVIEW TOOL: "Edit labels" mode.
+   A small button (bottom-left) outlines every title, piece of text, picture
+   and button with a dotted line and a short code, so Franccesca can say
+   exactly what to change, e.g. "H3-T1: make this warmer".
+
+   Code format:  <page><section>-<kind><number>
+     Pages:   H Home · S Services · W Why bookkeeping · A About · Q Get a quote
+              Y Thank-you page · E Not-found page
+              N = top menu, F = footer (the same on every page)
+     Kinds:   T title · W words · P picture · B button or link
+   Example:  W4-P2 = Why bookkeeping page, section 4, picture 2.
+
+   Tap a code to copy it. Codes are counted in page order, so they shift if
+   the page's content changes. Take fresh codes after each update.
+
+   Turn the button on/off with `showEditToggle` in site.config.ts.
+   Adding ?edit=1 to any page address opens it with labels already on. */
+import { url } from '../site.config';
+
+const pages: Record<string, string> = {
+  '': 'H',
+  'services/': 'S',
+  'why-bookkeeping/': 'W',
+  'about/': 'A',
+  'get-a-quote/': 'Q',
+  'get-a-quote/thanks/': 'Y',
+};
+const base = url();
+const rel = Astro.url.pathname.startsWith(base) ? Astro.url.pathname.slice(base.length) : Astro.url.pathname;
+const key = rel.replace(/^\//, '').replace(/index\.html$/, '');
+const pageCode = pages[key] ?? pages[key + '/'] ?? 'E';
+---
+<div class="em" data-page-code={pageCode}>
+  <button type="button" class="em-toggle" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-4-4L4 16z" /><path d="m13.5 6.5 4 4" /></svg>
+    <span class="em-toggle__label">Edit labels</span>
+  </button>
+  <div class="em-legend" hidden>
+    <p><strong>Page {pageCode}</strong> · tap a code to copy it <span class="em-legend__x" aria-hidden="true">×</span></p>
+    <p class="em-legend__kinds">
+      <span><b>T</b> title</span><span><b>W</b> words</span><span><b>P</b> picture</span><span><b>B</b> button / link</span>
+    </p>
+  </div>
+  <div class="em-layer" hidden></div>
+  <p class="em-toast" role="status" aria-live="polite"></p>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('.em');
+  if (root) {
+    const page = root.dataset.pageCode || 'E';
+    const toggle = root.querySelector<HTMLButtonElement>('.em-toggle')!;
+    const legend = root.querySelector<HTMLElement>('.em-legend')!;
+    const layer = root.querySelector<HTMLElement>('.em-layer')!;
+    const toast = root.querySelector<HTMLElement>('.em-toast')!;
+    const html = document.documentElement;
+    const STORE = 'tb-edit-labels';
+
+    // What counts as each kind. Widgets (sample card, shoebox demo, etc.)
+    // are labelled as one picture rather than every line inside them.
+    const WIDGETS = '.snap, .shoebox, .flow, .check__result, .qprogress';
+    const KINDS: [string, string][] = [
+      ['T', 'h1, h2, h3, h4, legend, summary'],
+      ['P', `img, figure.arch, .icon-bubble, svg.brand, ${WIDGETS}`],
+      ['B', 'a, button'],
+      ['W', 'p, li, blockquote, figcaption, label, .badge, .ribbon__item'],
+    ];
+    const SKIP = '.em, .leaf-shadow, .skip-link, [aria-hidden="true"] .ribbon__set:not(:first-child), .ribbon__set + .ribbon__set, .nav-toggle, .visually-hidden';
+
+    type Item = { el: Element; code: string; tag: HTMLButtonElement };
+    let items: Item[] = [];
+    let raf = 0;
+    let timer = 0;
+
+    const kindOf = (el: Element): string | null => {
+      for (const [k, sel] of KINDS) if (el.matches(sel)) return k;
+      return null;
+    };
+
+    // Text-type items that just wrap other labelled things (e.g. a card <li>
+    // holding a title and a paragraph) are left out, so we label the parts.
+    const wrapsBlocks = (el: Element) => {
+      if (el.matches('li, label, blockquote, figcaption') &&
+          el.querySelector('h1, h2, h3, h4, p, ul, ol, a, label, figure, .icon-bubble')) return true;
+      // Text that is nothing but a link or button: label the link only.
+      const inner = el.querySelectorAll('a, button');
+      const text = (n: Element) => (n.textContent || '').replace(/\s+/g, ' ').trim();
+      return inner.length === 1 && text(inner[0]) === text(el);
+    };
+
+    const collect = (scope: Element, prefix: string) => {
+      const counts: Record<string, number> = {};
+      const taken: Element[] = [];
+      scope.querySelectorAll('*').forEach((el) => {
+        if (el.closest(SKIP)) return;
+        if (el.closest('[hidden]') && !el.closest('.step')) return; // quote steps stay numbered
+        const kind = kindOf(el);
+        if (!kind) return;
+        if (kind === 'W' && wrapsBlocks(el)) return;
+        // Don't label things inside something already labelled (except buttons inside text, and pictures in buttons).
+        const parent = taken.find((t) => t !== el && t.contains(el));
+        if (parent) {
+          const pk = kindOf(parent);
+          if (pk === 'P' && parent.matches(WIDGETS)) return;
+          if (pk === 'B') return;
+          if (pk === 'W' && kind !== 'B') return;
+          if (pk === 'T') return;
+        }
+        if (kind === 'P' && el.matches('svg.brand') && el.closest('a, .icon-bubble, figure.arch')) return;
+        counts[kind] = (counts[kind] || 0) + 1;
+        taken.push(el);
+        const code = `${prefix}-${kind}${counts[kind]}`;
+        const tag = document.createElement('button');
+        tag.type = 'button';
+        tag.className = `em-tag em-tag--${kind}`;
+        tag.textContent = code;
+        const snippet = (el.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60);
+        tag.title = snippet ? `${code}: “${snippet}${snippet.length === 60 ? '…' : ''}”` : code;
+        tag.setAttribute('aria-label', `Copy label ${code}`);
+        tag.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          copy(code);
+        });
+        el.classList.add('em-target', `em-target--${kind}`);
+        items.push({ el, code, tag });
+      });
+    };
+
+    const build = () => {
+      items = [];
+      layer.replaceChildren();
+      const header = document.querySelector('.site-header');
+      const footer = document.querySelector('.site-footer');
+      if (header) collect(header, 'N');
+      document.querySelectorAll('main > *').forEach((section, i) => collect(section, `${page}${i + 1}`));
+      if (footer) collect(footer, 'F');
+      items.forEach((it) => layer.appendChild(it.tag));
+      place();
+    };
+
+    // Position every tag at the top-left corner of its element, nudging
+    // tags sideways when they would sit on top of one another.
+    const place = () => {
+      raf = 0;
+      const placed: DOMRect[] = [];
+      const vw = window.innerWidth;
+      // Content that has scrolled up under the sticky header shouldn't crowd its tags.
+      const headerEl = document.querySelector('.site-header');
+      const headerBottom = headerEl ? Math.max(0, headerEl.getBoundingClientRect().bottom) : 0;
+      for (const it of items) {
+        const r = it.el.getBoundingClientRect();
+        const inHeader = it.code.startsWith('N-');
+        const top = inHeader ? 0 : headerBottom;
+        const shown = (it.el as any).checkVisibility
+          ? (it.el as any).checkVisibility({ checkOpacity: true, checkVisibilityCSS: true, opacityProperty: true, visibilityProperty: true })
+          : true;
+        const covered = !inHeader && html.classList.contains('menu-open');
+        const visible = shown && !covered && r.width > 0 && r.height > 0 && r.bottom > top + 8 && r.top < window.innerHeight + 40;
+        it.tag.hidden = !visible;
+        if (!visible) continue;
+        const w = it.tag.offsetWidth || 44;
+        const h = it.tag.offsetHeight || 18;
+        let x = Math.max(2, Math.min(r.left - 2, vw - w - 2));
+        let y = Math.max(top + 2, r.top - h - 3);
+        for (let guard = 0; guard < 12; guard++) {
+          const hit = placed.find((p) => x < p.right + 2 && x + w > p.left - 2 && y < p.bottom && y + h > p.top);
+          if (!hit) break;
+          x = hit.right + 4;
+          if (x + w > vw - 2) { x = Math.max(2, r.left - 2); y = hit.bottom + 2; }
+        }
+        it.tag.style.transform = `translate(${Math.round(x)}px, ${Math.round(y)}px)`;
+        placed.push(new DOMRect(x, y, w, h));
+      }
+    };
+    const schedule = () => { if (!raf) raf = requestAnimationFrame(place); };
+
+    const copy = async (code: string) => {
+      try {
+        await navigator.clipboard.writeText(code);
+        toast.textContent = `Copied ${code}`;
+      } catch {
+        toast.textContent = `Label ${code}`;
+      }
+      toast.classList.add('is-on');
+      clearTimeout((toast as any)._t);
+      (toast as any)._t = setTimeout(() => toast.classList.remove('is-on'), 1600);
+    };
+
+    const setOn = (on: boolean) => {
+      toggle.setAttribute('aria-pressed', String(on));
+      toggle.querySelector('.em-toggle__label')!.textContent = on ? 'Labels on' : 'Edit labels';
+      legend.hidden = !on;
+      layer.hidden = !on;
+      html.classList.toggle('edit-labels', on);
+      try { on ? localStorage.setItem(STORE, '1') : localStorage.removeItem(STORE); } catch {}
+      if (on) {
+        // Show everything in its finished state so nothing moves.
+        document.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('is-in'));
+        document.querySelectorAll('[data-shoebox]').forEach((el) => el.classList.add('is-sorted'));
+        build();
+        window.addEventListener('scroll', schedule, { passive: true });
+        window.addEventListener('resize', schedule);
+        setTimeout(place, 300);
+        // Keep tags in step with things that open/close (menu, FAQs, quote steps).
+        clearInterval(timer);
+        timer = window.setInterval(place, 900);
+      } else {
+        window.removeEventListener('scroll', schedule);
+        window.removeEventListener('resize', schedule);
+        clearInterval(timer);
+        document.querySelectorAll('.em-target').forEach((el) =>
+          el.classList.remove('em-target', 'em-target--T', 'em-target--W', 'em-target--P', 'em-target--B'),
+        );
+        items = [];
+        layer.replaceChildren();
+      }
+    };
+
+    toggle.addEventListener('click', () => setOn(toggle.getAttribute('aria-pressed') !== 'true'));
+    legend.addEventListener('click', () => { legend.hidden = true; });
+
+    let startOn = new URLSearchParams(location.search).get('edit') === '1';
+    try { startOn ||= localStorage.getItem(STORE) === '1'; } catch {}
+    if (startOn) {
+      if (document.fonts?.ready) document.fonts.ready.then(() => setOn(true));
+      else setOn(true);
+    }
+  }
+</script>
+
+<style>
+  .em-toggle {
+    position: fixed;
+    left: 1rem;
+    bottom: 1rem;
+    z-index: 400;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.5rem 1rem 0.5rem 0.85rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--tb-navy);
+    color: var(--tb-cream);
+    font: 600 0.88rem var(--font-body);
+    box-shadow: 0 10px 24px -10px rgb(33 49 63 / 0.7);
+    cursor: pointer;
+  }
+  .em-toggle svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .em-toggle[aria-pressed='true'] { background: #B5532E; }
+
+  .em-legend {
+    position: fixed;
+    left: 1rem;
+    bottom: 4.1rem;
+    z-index: 400;
+    max-width: min(22rem, calc(100vw - 2rem));
+    padding: 0.7rem 0.9rem;
+    border-radius: 12px;
+    background: #fff;
+    color: var(--tb-navy);
+    font: 400 0.82rem/1.4 var(--font-body);
+    box-shadow: 0 12px 30px -12px rgb(33 49 63 / 0.5);
+  }
+  .em-legend { cursor: pointer; }
+  .em-legend p { margin: 0; }
+  .em-legend__x { float: right; margin-left: 0.75rem; color: var(--tb-slate); font-size: 1rem; line-height: 1; }
+  .em-legend__kinds { display: flex; flex-wrap: wrap; gap: 0.25rem 0.8rem; margin-top: 0.3rem !important; color: var(--tb-slate); }
+  .em-legend b { color: #B5532E; }
+
+  .em-layer { position: fixed; inset: 0; z-index: 390; pointer-events: none; }
+  .em-layer :global(.em-tag) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0.05rem 0.35rem;
+    border: 0;
+    border-radius: 4px;
+    background: #B5532E;
+    color: #fff;
+    font: 700 0.7rem/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    pointer-events: auto;
+    cursor: copy;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
+  }
+  .em-layer :global(.em-tag--T) { background: #B5532E; }
+  .em-layer :global(.em-tag--W) { background: #2F6E8F; }
+  .em-layer :global(.em-tag--P) { background: #6A5A9E; }
+  .em-layer :global(.em-tag--B) { background: #2E7D4F; }
+  .em-layer :global(.em-tag:hover) { filter: brightness(1.15); }
+  .em-layer :global(.em-tag[hidden]) { display: none; }
+
+  :global(.edit-labels .em-target) { outline: 1.5px dotted #B5532E !important; outline-offset: 2px; }
+  :global(.edit-labels .em-target--W) { outline-color: #2F6E8F !important; }
+  :global(.edit-labels .em-target--P) { outline-color: #6A5A9E !important; }
+  :global(.edit-labels .em-target--B) { outline-color: #2E7D4F !important; }
+
+  /* Show everything in its finished state, with no motion, so labels stay put. */
+  :global(.edit-labels [data-reveal]) { opacity: 1 !important; transform: none !important; }
+  :global(.edit-labels main *), :global(.edit-labels main *::before), :global(.edit-labels main *::after),
+  :global(.edit-labels .site-footer *), :global(.edit-labels .site-header *) {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .em-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 1.25rem;
+    z-index: 410;
+    margin: 0;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    background: var(--tb-navy);
+    color: var(--tb-cream);
+    font: 600 0.85rem var(--font-body);
+    translate: -50% 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, translate 0.2s;
+  }
+  .em-toast:global(.is-on) { opacity: 1; translate: -50% 0; }
+</style>

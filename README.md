@@ -29,6 +29,17 @@ Then open http://localhost:4321.
 
 Search the project for `PLACEHOLDER` and `TBD` to find everything that still needs real content.
 
+### Edit labels (review tool)
+
+While `showEditToggle: true` in `src/site.config.ts`, every page has an **Edit labels** button (bottom-left). It outlines each title, text, picture and button and tags it with a code, so feedback can point at exact spots:
+
+- Code format: page letter + section number, then kind + number. `H3-T1` = Home, section 3, Title 1.
+- Pages: **H** Home, **S** Services, **W** Why bookkeeping, **A** About, **Q** Get a quote, **Y** thank-you page, **E** not-found page. **N** = top menu, **F** = footer (same on every page).
+- Kinds: **T** title, **W** words, **P** picture, **B** button or link.
+- Tap a tag to copy its code. Add `?edit=1` to any address to open with labels already on, e.g. https://corrigk.github.io/truebranch-accounting/?edit=1
+- Codes count in page order, so they shift when content changes. Use fresh codes after each update.
+- Set `showEditToggle: false` before launch.
+
 Draft mode is off. To review copy with Franccesca, set `showDraftMarkers: true` in `src/site.config.ts`: it adds a banner, dashed outlines around draft copy, and sample testimonials.
 
 The quote form links can pre-fill answers, e.g. `get-a-quote/?stress=taxes,mixing&tax=yes`. The self-check and the scenario cards use this.

@@ -44,6 +44,11 @@ export const site = {
   // is a work in progress. Set to false when you launch.
   previewMode: true,
 
+  // REVIEW TOOL: shows the "Edit labels" button (bottom-left) that tags every
+  // title, text, picture and button with a code like "H3-T1", so feedback
+  // can point at exact spots. Set to false before launch.
+  showEditToggle: true,
+
   // DRAFT MODE: true shows a banner, dashed outlines around draft copy,
   // and the sample testimonials. Turn on when reviewing copy with Franccesca.
   showDraftMarkers: false,
