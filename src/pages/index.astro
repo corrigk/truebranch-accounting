@@ -215,12 +215,14 @@ const benefits = [
     margin: 0;
     padding: 1.5rem 0 0;
     border-top: 1px solid var(--tb-line);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem 1.75rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem 2rem;
+    max-width: 34rem;
     font-size: 0.93rem;
     color: var(--tb-slate);
   }
+  @media (min-width: 30rem) { .hero__promises { grid-template-columns: repeat(2, max-content); } }
   .hero__promises li { display: flex; align-items: center; gap: 0.5rem; }
   .hero__promises :global(.icon) { width: 1.2rem; color: var(--tb-olive); }
 
@@ -285,7 +287,8 @@ const benefits = [
     rotate: 20deg;
   }
   .services { display: grid; gap: 1.5rem; }
-  @media (min-width: 60rem) { .services { grid-template-columns: repeat(3, 1fr); } }
+  /* Side by side, each card's rows (icon, name, description, list, link) line up across cards */
+  @media (min-width: 60rem) { .services { grid-template-columns: repeat(3, 1fr); row-gap: 0; } }
   .service { display: flex; flex-direction: column; align-items: flex-start; color: var(--tb-navy); }
   .service .icon-bubble { margin-bottom: 1.25rem; }
   .service__kicker { margin: 0; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--tb-olive); }
@@ -298,6 +301,10 @@ const benefits = [
   .service--growth { background: var(--pkg-tint, #E1DDC7); }
   :global(html[data-theme='dusty']) .service--growth { --pkg-tint: #D6DCE1; }
   .service--premium { background: var(--tb-cream); }
+  @media (min-width: 60rem) {
+    .service { display: grid; grid-row: span 6; grid-template-rows: subgrid; justify-items: start; align-content: start; }
+    .service .text-link { align-self: end; }
+  }
 
   .service-soon {
     display: flex;

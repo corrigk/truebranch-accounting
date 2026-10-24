@@ -1,7 +1,7 @@
 ---
 import Brand from './Brand.astro';
 import Icon from './Icon.astro';
-import { site, nav, quoteHref, url, serviceArea } from '../site.config';
+import { site, nav, quoteHref, url, serviceArea, clientLogin } from '../site.config';
 const year = new Date().getFullYear();
 ---
 <footer class="site-footer on-dark">
@@ -20,6 +20,7 @@ const year = new Date().getFullYear();
       <ul>
         {nav.map((item) => <li><a href={url(item.href)}>{item.label}</a></li>)}
         <li><a href={url(quoteHref)}>Get a quote</a></li>
+        <li><a href={clientLogin().href}>Client login</a></li>
       </ul>
     </nav>
 

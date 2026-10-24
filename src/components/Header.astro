@@ -1,7 +1,8 @@
 ---
 import Brand from './Brand.astro';
-import { site, nav, quoteHref, url } from '../site.config';
+import { site, nav, quoteHref, url, clientLogin } from '../site.config';
 
+const login = clientLogin();
 const current = Astro.url.pathname.replace(/\/$/, '');
 const isCurrent = (href: string) => url(href).replace(/\/$/, '') === current;
 ---
@@ -23,7 +24,13 @@ const isCurrent = (href: string) => url(href).replace(/\/$/, '') === current;
             <a href={url(item.href)} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
           </li>
         ))}
-        <li class="site-nav__cta" style={`--i:${nav.length}`}>
+        <li class="site-nav__client" style={`--i:${nav.length}`}>
+          <a href={login.href} aria-current={!login.external && isCurrent('clients/') ? 'page' : undefined}>
+            <svg class="site-nav__lock" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2" /><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" /></svg>
+            Client login
+          </a>
+        </li>
+        <li class="site-nav__cta" style={`--i:${nav.length + 1}`}>
           <a class="btn btn--primary" href={url(quoteHref)} aria-current={isCurrent(quoteHref) ? 'page' : undefined}>
             Get a quote <span class="arrow" aria-hidden="true">→</span>
           </a>
@@ -64,7 +71,7 @@ const isCurrent = (href: string) => url(href).replace(/\/$/, '') === current;
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && navEl.classList.contains('is-open')) { setOpen(false); toggle.focus(); }
     });
-    window.matchMedia('(min-width: 56.01rem)').addEventListener('change', (e) => { if (e.matches) setOpen(false); });
+    window.matchMedia('(min-width: 64.01rem)').addEventListener('change', (e) => { if (e.matches) setOpen(false); });
   }
 </script>
 
@@ -132,6 +139,22 @@ const isCurrent = (href: string) => url(href).replace(/\/$/, '') === current;
   .site-nav .btn { min-height: 2.75rem; padding: 0.55rem 1.3rem; font-size: 0.95rem; }
   .site-nav__sheet-foot { display: none; }
 
+  /* Client login: set apart from the page links by a thin divider */
+  .site-nav__client { display: flex; align-items: center; }
+  .site-nav__client a { display: inline-flex !important; align-items: center; gap: 0.4rem; }
+  .site-nav__lock {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  @media (min-width: 64.01rem) {
+    .site-nav__client { padding-left: 1.5rem; border-left: 1px solid var(--tb-line); }
+  }
+
   .nav-toggle {
     position: relative;
     z-index: 2;
@@ -166,7 +189,7 @@ const isCurrent = (href: string) => url(href).replace(/\/$/, '') === current;
   .nav-toggle[aria-expanded='true'] .nav-toggle__bars::after { transform: translateY(-5px) rotate(-45deg); }
 
   /* ---- Small screens ---- */
-  @media (max-width: 56rem) {
+  @media (max-width: 64rem) {
     .site-nav { width: 100%; }
     /* JS on: a full-screen cream sheet with big serif links */
     :global(.has-nav-toggle) .site-nav {
@@ -229,7 +252,7 @@ const isCurrent = (href: string) => url(href).replace(/\/$/, '') === current;
     :global(html.menu-open) { overflow: hidden; }
     :global(html.menu-open) .site-header { background: transparent; box-shadow: none; backdrop-filter: none; }
   }
-  @media (min-width: 56.01rem) {
+  @media (min-width: 64.01rem) {
     .nav-toggle { display: none !important; }
   }
 </style>

@@ -38,6 +38,17 @@ export const site = {
   formEndpoint: 'https://api.web3forms.com/submit',
   formAccessKey: 'PLACEHOLDER_WEB3FORMS_ACCESS_KEY',
 
+  // TBD: online booking. Paste a scheduling link (e.g. Calendly or Cal.com,
+  // like 'https://cal.com/truebranch/intro-call') to show a live booking
+  // calendar on the quote page. Leave '' to show a "coming soon" card.
+  bookingUrl: '',
+
+  // TBD: client portal. Paste the login link of whatever portal is chosen
+  // (an accounting client portal, or a Dropbox "file request" link) and the
+  // "Client login" link in the menu goes straight there. Leave '' to show the
+  // placeholder page at /clients/.
+  clientPortalUrl: '',
+
   // TBD: social links. Leave the list empty to hide them.
   // Example: { label: 'Instagram', href: 'https://instagram.com/...' }
   socials: [] as { label: string; href: string }[],
@@ -81,6 +92,13 @@ export const nav = [
 ];
 
 export const quoteHref = 'get-a-quote/';
+
+/** Where "Client login" goes: the real portal once set, otherwise the placeholder page. */
+export function clientLogin(): { href: string; external: boolean } {
+  return site.clientPortalUrl
+    ? { href: site.clientPortalUrl, external: true }
+    : { href: url('clients/'), external: false };
+}
 
 /** Builds a link that works on Netlify and on GitHub Pages sub-paths. */
 export function url(path = ''): string {

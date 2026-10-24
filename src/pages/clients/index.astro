@@ -1,0 +1,81 @@
+---
+/* CLIENT PORTAL — placeholder page.
+   The "Client login" link in the menu comes here until `clientPortalUrl`
+   is set in site.config.ts; after that it goes straight to the real portal
+   and this page is no longer linked.
+   Wording is DRAFT; the three features describe what's planned, not live. */
+import Base from '../../layouts/Base.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import Icon from '../../components/Icon.astro';
+import Brand from '../../components/Brand.astro';
+import { site } from '../../site.config';
+
+const features = [
+  { icon: 'shield', title: 'Send documents securely', text: 'Upload statements and receipts straight to me, without email attachments.' },
+  { icon: 'chart', title: 'See your monthly reports', text: 'Your profit and loss and other reports, in one place whenever you need them.' },
+  { icon: 'receipt', title: 'Pay invoices online', text: 'View and pay your bookkeeping invoices in a couple of clicks.' },
+] as const;
+---
+<Base title="Client login" description="The TrueBranch Accounting client portal is coming soon." noindex>
+  <PageIntro eyebrow="Clients" title="Your client <em>portal</em> is on its way.">
+    <p class="lede draft">
+      A secure place to share documents, see your reports and pay invoices is coming soon.
+    </p>
+  </PageIntro>
+
+  <section class="section">
+    <div class="wrap">
+      <ul class="features" role="list">
+        {features.map((f, i) => (
+          <li class="card feature draft" data-reveal style={`--d:${i}`}>
+            <span class="icon-bubble"><Icon name={f.icon} /></span>
+            <span class="badge badge--soft">Coming soon</span>
+            <h2>{f.title}</h2>
+            <p>{f.text}</p>
+          </li>
+        ))}
+      </ul>
+
+      <div class="current" data-reveal>
+        <Brand name="emblem" class="current__seal" />
+        <div>
+          <h2>Already a client?</h2>
+          <p class="draft">
+            Keep using the shared folder link I sent you for documents, or email me any time at
+            <a href={`mailto:${site.email}`}>{site.email}</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .features { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.5rem; }
+  @media (min-width: 52rem) { .features { grid-template-columns: repeat(3, 1fr); } }
+  .feature { display: flex; flex-direction: column; align-items: flex-start; }
+  .feature .icon-bubble { margin-bottom: 1rem; }
+  .feature h2 { font-size: clamp(1.5rem, 2.6vw, 1.8rem); font-weight: 500; margin: 0.9rem 0 0.4rem; }
+  .feature p { margin: 0; color: var(--tb-slate); }
+  @media (min-width: 52rem) {
+    .features { row-gap: 0; }
+    .feature { display: grid; grid-row: span 4; grid-template-rows: subgrid; align-content: start; justify-items: start; }
+  }
+
+  .current {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.25rem 2rem;
+    margin-top: 2rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    border-radius: var(--radius-lg);
+    background: var(--tb-navy);
+    color: var(--tb-cream);
+  }
+  .current > div { flex: 1 1 20rem; }
+  .current h2 { font-size: clamp(1.6rem, 3vw, 2rem); margin-bottom: 0.4rem; }
+  .current p { margin: 0; color: #D5D6D2; }
+  .current a { color: var(--tb-cream); overflow-wrap: anywhere; }
+  .current :global(.current__seal) { width: 3.5rem; color: var(--tb-mist); }
+</style>

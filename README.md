@@ -52,13 +52,13 @@ All motion respects the visitor's reduced-motion setting, and every interactive 
 
 While `showThemePicker: true`, a bar at the top of every page switches between four themes built from the brand palette: **Minimal** (classic), **Olive Grove**, **Dusty Blue** and **Bold & Earthy**. Links can open in a theme with `?theme=bold` (or `classic`, `olive`, `dusty`). Once Franccesca picks one, set `theme` in `src/site.config.ts` and `showThemePicker: false`. Themes live in `src/styles/themes.css`.
 
-## Future ideas (not started)
+## Booking and client portal (placeholders in place)
 
-Saved from Franccesca's notes, to do after the look and content are settled:
+- **Booking:** set `bookingUrl` in `src/site.config.ts` to a Calendly / Cal.com link and a live calendar appears on the Get a quote page. Until then it shows a "coming soon" card.
+- **Client login:** the menu and footer link to `/clients/`, a "portal coming soon" page. Set `clientPortalUrl` to the real portal's login link and both links go straight there.
+- **Package prices:** fill in `price` for each package and add-on in `src/data/packages.ts`.
 
-- **Booking / scheduling**: let people book a call from the site (e.g. an embedded Calendly or similar).
-- **Client login portal**: clients sign in securely and send documents (e.g. via Dropbox or another file service). Needs a backend/database and likely a paid service; she's open to paying for it.
-- **Package prices**: fill in `price` for each package and add-on in `src/data/packages.ts`.
+Recommended direction (see the conversation notes): start with Dropbox file requests + QuickBooks Online invoicing + a free scheduling tool; move to an all-in-one accounting client portal if she wants one branded login; avoid a custom Supabase-built portal for financial documents unless there's a need no off-the-shelf tool covers.
 
 ## Deploying (GitHub Pages)
 

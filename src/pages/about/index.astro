@@ -158,6 +158,10 @@ const values = [
   @media (min-width: 48rem) { .values { grid-template-columns: repeat(3, 1fr); } }
   .value .icon-bubble { margin-bottom: 1.25rem; }
   .value p { color: var(--tb-slate); margin: 0; }
+  @media (min-width: 48rem) {
+    .values { row-gap: 0; }
+    .value { display: grid; grid-row: span 3; grid-template-rows: subgrid; align-content: start; justify-items: start; }
+  }
   .area { display: flex; justify-content: center; gap: 0.5rem; margin: 2.5rem auto 0; color: var(--tb-slate); text-align: center; }
   .area :global(.icon) { width: 1.2rem; color: var(--tb-olive); margin-top: 0.15rem; }
 </style>

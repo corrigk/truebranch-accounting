@@ -1,0 +1,58 @@
+---
+/* "Book a call" card.
+   With `bookingUrl` set in site.config.ts (Calendly, Cal.com, etc.), it
+   shows that scheduling page right here. Until then it shows a friendly
+   "coming soon" note that points to the quote form. */
+import Icon from './Icon.astro';
+import { site } from '../site.config';
+interface Props { compact?: boolean }
+const { compact = false } = Astro.props;
+---
+<div class:list={['booking', { 'booking--compact': compact }]}>
+  <div class="booking__head">
+    <span class="icon-bubble"><Icon name="calendar" /></span>
+    <div>
+      <h2 class="booking__title">Prefer to <em>talk first</em>?</h2>
+      <p class="booking__sub">
+        {site.bookingUrl
+          ? 'Pick a time that suits you for a quick call.'
+          : 'Online booking is coming soon. For now, mention a good time to call in the form and I’ll reach out.'}
+      </p>
+    </div>
+  </div>
+  {site.bookingUrl ? (
+    <div class="booking__frame">
+      <iframe src={site.bookingUrl} title="Book a call with Franccesca" loading="lazy"></iframe>
+    </div>
+  ) : (
+    <p class="booking__soon"><span class="badge badge--soft">Coming soon</span> Online scheduling</p>
+  )}
+</div>
+
+<style>
+  .booking {
+    padding: clamp(1.4rem, 3vw, 2rem);
+    border-radius: var(--radius-lg);
+    background: var(--tb-paper);
+    box-shadow: var(--shadow-soft);
+  }
+  .booking__head { display: flex; gap: 1rem; align-items: flex-start; }
+  .booking__head .icon-bubble { flex-shrink: 0; }
+  .booking__title { font-size: clamp(1.5rem, 2.6vw, 1.85rem); margin: 0 0 0.35rem; }
+  .booking__sub { margin: 0; color: var(--tb-slate); font-size: 0.95rem; }
+  .booking__soon {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 1.25rem 0 0;
+    font-size: 0.9rem;
+    color: var(--tb-slate);
+  }
+  .booking__frame {
+    margin-top: 1.25rem;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .booking__frame iframe { display: block; width: 100%; height: 640px; border: 0; }
+</style>

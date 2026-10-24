@@ -15,6 +15,7 @@ import Base from '../../layouts/Base.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import Brand from '../../components/Brand.astro';
 import Icon from '../../components/Icon.astro';
+import BookingCard from '../../components/BookingCard.astro';
 import { site, url } from '../../site.config';
 
 const businessTypes = [
@@ -253,6 +254,7 @@ const thanksUrl = Astro.site ? new URL(url('get-a-quote/thanks/'), Astro.site).h
           <span><strong>Please don’t include</strong> account numbers, Social Security numbers, or other sensitive
           financial details here.</span>
         </p>
+        <div class="quote__booking"><BookingCard /></div>
       </aside>
     </div>
   </section>
@@ -641,5 +643,6 @@ const thanksUrl = Astro.site ? new URL(url('get-a-quote/thanks/'), Astro.site).h
     background: rgb(87 82 56 / 0.1);
     font-size: 0.95rem;
   }
+  .quote__booking { margin-top: 1rem; }
   .notice :global(.icon) { width: 1.4rem; color: var(--tb-olive); margin-top: 0.1rem; }
 </style>

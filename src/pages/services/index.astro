@@ -48,7 +48,7 @@ const style = { essentials: 'pkg--light', growth: 'pkg--tint', premium: 'pkg--da
               <p class="pkg__price">{p.price || 'Contact for a quote'}</p>
             </div>
             <p class="pkg__ideal"><strong>Ideal for:</strong> {p.idealClient}</p>
-            {p.includesFrom && <p class="pkg__from">{p.includesFrom}</p>}
+            <p class="pkg__from">{p.includesFrom || 'What’s included:'}</p>
             <ul class="pkg__list">
               {p.included.map((item) => <li><Icon name="check" />{item}</li>)}
             </ul>
@@ -185,7 +185,7 @@ const style = { essentials: 'pkg--light', growth: 'pkg--tint', premium: 'pkg--da
   .pkg__ideal { font-size: 0.97rem; color: var(--tb-slate); }
   .pkg__ideal strong { color: var(--tb-navy); }
   .pkg__from { font-weight: 600; margin-bottom: 0.6rem; color: var(--tb-olive); }
-  .pkg__list { list-style: none; margin: 0 0 2rem; padding: 0; display: grid; gap: 0.65rem; font-size: 0.97rem; }
+  .pkg__list { list-style: none; margin: 0 0 2rem; padding: 0; display: grid; gap: 0.65rem; align-content: start; font-size: 0.97rem; }
   .pkg__list li { display: flex; gap: 0.65rem; align-items: flex-start; }
   .pkg__list :global(.icon) {
     width: 1.3rem;
@@ -201,6 +201,12 @@ const style = { essentials: 'pkg--light', growth: 'pkg--tint', premium: 'pkg--da
   .pkg--dark .pkg__list :global(.icon) { background: rgb(234 231 223 / 0.14); }
   .pkg__cta { margin-top: auto; align-self: flex-start; }
   .pkg--dark .pkg__cta { --btn-bg: #EAE7DF; --btn-fg: #21313F; }
+  /* Side by side, the header, "ideal for", list and button line up across cards */
+  @media (min-width: 62rem) {
+    .pkgs { row-gap: 0; }
+    .pkg { display: grid; grid-row: span 5; grid-template-rows: subgrid; align-content: start; }
+    .pkg__cta { align-self: end; justify-self: start; }
+  }
 
   /* ---------- Add-ons ---------- */
   .addons {
@@ -312,10 +318,14 @@ const style = { essentials: 'pkg--light', growth: 'pkg--tint', premium: 'pkg--da
     background: transparent;
     border: 1.5px dashed var(--tb-line);
     box-shadow: none;
-    max-width: 46rem;
+    padding-right: clamp(1.6rem, 14vw, 12rem);
   }
   .soon h2 { font-size: clamp(2rem, 4vw, 2.6rem); margin-top: 1rem; }
-  .soon__sprout { position: absolute; right: 1.5rem; top: 1.25rem; width: 6.5rem; }
+  .soon p { max-width: 52ch; }
+  .soon__sprout { position: absolute; right: clamp(1.25rem, 5vw, 4rem); top: 50%; translate: 0 -50%; width: clamp(5rem, 10vw, 8rem); }
+  @media (max-width: 40rem) {
+    .soon__sprout { top: 1.25rem; translate: none; width: 4.5rem; }
+  }
   .soon__sprout svg { overflow: visible; }
   .soon__soil { fill: none; stroke: var(--tb-mist); stroke-width: 2; stroke-linecap: round; }
   .soon__stem { fill: none; stroke: var(--tb-olive); stroke-width: 2.4; stroke-linecap: round; stroke-dasharray: 60; animation: grow-stem 2.4s var(--ease) both 0.3s; }

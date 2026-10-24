@@ -375,6 +375,12 @@ const faqs = [
   }
   .scenario__help :global(.scenario__sprig) { width: 2.4rem; flex-shrink: 0; color: var(--tb-olive); opacity: 0.8; align-self: flex-start; margin-top: 0.2rem; }
   .scenario .text-link { margin-top: auto; }
+  /* Two per row: icon, title, story, "how it helps" and link line up across each pair */
+  @media (min-width: 48rem) {
+    .scenarios { row-gap: 0; }
+    .scenario { display: grid; grid-row: span 5; grid-template-rows: subgrid; align-content: start; justify-items: start; margin-bottom: 1.5rem; }
+    .scenario .text-link { align-self: end; }
+  }
 
   /* ---------- FAQ ---------- */
   .faq { display: grid; gap: 2rem; }

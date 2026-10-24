@@ -6,7 +6,7 @@
 
    Code format:  <page><section>-<kind><number>
      Pages:   H Home · S Services · W Why bookkeeping · A About · Q Get a quote
-              Y Thank-you page · E Not-found page
+              Y Thank-you page · C Client login page · E Not-found page
               N = top menu, F = footer (the same on every page)
      Kinds:   T title · W words · P picture · B button or link
    Example:  W4-P2 = Why bookkeeping page, section 4, picture 2.
@@ -25,6 +25,7 @@ const pages: Record<string, string> = {
   'about/': 'A',
   'get-a-quote/': 'Q',
   'get-a-quote/thanks/': 'Y',
+  'clients/': 'C',
 };
 const base = url();
 const rel = Astro.url.pathname.startsWith(base) ? Astro.url.pathname.slice(base.length) : Astro.url.pathname;
