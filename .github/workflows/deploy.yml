@@ -28,10 +28,9 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
-          # Address of the published site. When a custom domain is connected
-          # later, set SITE_URL to it and remove BASE_PATH.
-          SITE_URL: https://corrigk.github.io
-          BASE_PATH: /truebranch-accounting
+          # The site lives at the root of the custom domain, so there is no
+          # BASE_PATH. (On plain github.io it would need /truebranch-accounting.)
+          SITE_URL: https://truebranchaccounting.com
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

@@ -69,8 +69,8 @@ Recommended direction (see the conversation notes): start with Dropbox file requ
 Every push to `main` builds and publishes the site through `.github/workflows/deploy.yml`.
 One-time setup: repo **Settings → Pages → Source: GitHub Actions**.
 
-- Preview address: https://corrigk.github.io/truebranch-accounting/
-- With a custom domain: set `SITE_URL` to the domain and delete `BASE_PATH` in the workflow file, then add the domain under Settings → Pages.
+- Live address: https://truebranchaccounting.com (custom domain, set in Settings → Pages; DNS records are at Squarespace).
+- The workflow sets `SITE_URL=https://truebranchaccounting.com` and no `BASE_PATH`. If the custom domain is ever removed, set `BASE_PATH=/truebranch-accounting` again.
 - `SITE_URL` turns on canonical URLs, the link-preview image, and `sitemap-index.xml`.
 - Fonts are self-hosted from npm packages, so there are no Google Fonts requests.
 - At launch, set `previewMode: false` in `src/site.config.ts` so search engines can list the site.
