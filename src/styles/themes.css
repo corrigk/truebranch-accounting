@@ -42,6 +42,7 @@ html[data-theme='bold'] .benefit:nth-child(2) {
 }
 .band-navy,
 html[data-theme='bold'] .section--paper:nth-of-type(even),
+html[data-theme='bold'] .qbo-sec, /* keeps it from merging with the green packages band above */
 html[data-theme='bold'] .benefit:nth-child(1),
 html[data-theme='bold'] .value:nth-child(2) {
   --tb-cream:  #21313F;
@@ -50,6 +51,28 @@ html[data-theme='bold'] .value:nth-child(2) {
   --tb-forest: #383A28;
 }
 :is(.band-forest, .band-navy, html[data-theme='bold'] .section--paper) .press { text-shadow: none; }
+
+/* A light card placed inside a dark band: restores the normal palette so
+   its text is dark again. */
+.band-light {
+  --tb-navy:   #21313F;
+  --tb-slate:  #4A5561;
+  --tb-forest: #383A28;
+  --tb-cream:  #EAE7DF;
+  --tb-olive:  #575238;
+  --tb-mist:   #9CA5B0;
+  --tb-paper:  #F4F2EC;
+  --tb-white:  #FFFFFF;
+  --tb-line:   #C9CBC8;
+  --tb-sun:    #FBF6EA;
+  --tb-shade:  33 49 63;
+  color: var(--tb-navy);
+}
+/* Small section labels inside dark bands stay light, whatever a theme sets elsewhere. */
+html[data-theme] :is(.band-forest, .band-navy) .eyebrow { color: var(--tb-olive); }
+
+/* Light blue (a pale tint of the brand navy), used instead of a yellow tint */
+.tint-blue { background: #DCE3EA !important; }
 
 /* Tinted backgrounds are a little darker than cream, so secondary text uses a
    deeper slate there to keep WCAG AA contrast (4.5:1). */
@@ -61,9 +84,6 @@ html:is([data-theme='olive'], [data-theme='dusty'], [data-theme='bold']) { --tb-
 html[data-theme] .on-dark .btn--primary { --btn-bg: var(--tb-cream); --btn-fg: var(--tb-navy); }
 html[data-theme] .on-dark .btn--primary:hover { --btn-bg: #fff; }
 
-/* A tinted card sitting inside a dark band gets a deep olive instead,
-   so its (now cream) text stays readable. */
-html[data-theme='bold'] .section--paper .service--growth { background: #4A4630; --tb-slate: #D2D3CC; }
 
 /* ---------- Shared "color box" treatment for the non-minimal themes ---------- */
 html:is([data-theme='olive'], [data-theme='dusty'], [data-theme='bold']) .benefit,

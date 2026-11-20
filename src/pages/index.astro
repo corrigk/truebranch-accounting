@@ -109,7 +109,8 @@ const benefits = [
   </section>
 
   <!-- ============ SERVICES OVERVIEW ============ -->
-  <section class="section section--paper services-sec" aria-labelledby="services-title">
+  <!-- Dark green section; Essentials and Growth stay light, Premium is navy -->
+  <section class="section band-forest services-sec" aria-labelledby="services-title">
     <Brand name="branch" class="services-sec__branch" />
     <div class="wrap">
       <div class="section-head" data-reveal>
@@ -118,7 +119,7 @@ const benefits = [
       </div>
       <div class="services">
         {packages.map((p, i) => (
-          <article class={`card card--lift service service--${p.id} ${p.id === 'premium' ? 'band-navy' : ''}`} data-reveal style={`--d:${i}`}>
+          <article class={`card card--lift service service--${p.id} ${p.id === 'premium' ? 'band-navy' : 'band-light'}`} data-reveal style={`--d:${i}`}>
             <span class="icon-bubble"><Icon name={pkgIcons[p.id]} /></span>
             <p class="service__kicker">Bookkeeping</p>
             <h3>{p.name.replace('Bookkeeping ', '')}</h3>
@@ -298,8 +299,9 @@ const benefits = [
   .service__list li { display: flex; gap: 0.55rem; align-items: center; }
   .service__list :global(.icon) { width: 1.15rem; height: 1.15rem; color: var(--tb-olive); stroke-width: 2.2; }
   .service .text-link { margin-top: auto; color: var(--tb-navy); }
-  .service--growth { background: var(--pkg-tint, #E1DDC7); }
-  :global(html[data-theme='dusty']) .service--growth { --pkg-tint: #D6DCE1; }
+  /* Growth: pale navy-blue card, with the olive used for its name instead */
+  .service--growth { background: #DCE3EA; }
+  .service--growth h3 { color: var(--tb-olive); }
   .service--premium { background: var(--tb-cream); }
   @media (min-width: 60rem) {
     .service { display: grid; grid-row: span 6; grid-template-rows: subgrid; justify-items: start; align-content: start; }

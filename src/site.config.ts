@@ -9,7 +9,7 @@
 export const site = {
   name: 'TrueBranch Accounting',
   legalName: 'TrueBranch Accounting LLC',
-  owner: 'Franccesca Thomas',
+  owner: 'Franccesca Rankin',
   ownerFirstName: 'Franccesca',
 
   // PLACEHOLDER: business email. Shown on the site as the contact address.

@@ -19,7 +19,8 @@ const steps = [
 ] as const;
 
 // Visual style per package: light, tinted, dark.
-const style = { essentials: 'pkg--light', growth: 'pkg--tint', premium: 'pkg--dark band-navy' };
+// Cards sit on a dark green section: Essentials cream, Growth pale blue, Premium navy.
+const style = { essentials: 'pkg--light band-light', growth: 'pkg--tint band-light', premium: 'pkg--dark band-navy' };
 ---
 <Base
   title="Services"
@@ -31,7 +32,7 @@ const style = { essentials: 'pkg--light', growth: 'pkg--tint', premium: 'pkg--da
   </PageIntro>
 
   <!-- ============ PACKAGES ============ -->
-  <section class="section" aria-labelledby="packages-title">
+  <section class="section band-forest pkgs-sec" aria-labelledby="packages-title">
     <div class="wrap">
       <div class="section-head" data-reveal>
         <p class="eyebrow">Monthly packages</p>
@@ -79,7 +80,7 @@ const style = { essentials: 'pkg--light', growth: 'pkg--tint', premium: 'pkg--da
   </section>
 
   <!-- ============ QUICKBOOKS ONLINE ============ -->
-  <section class="section section--paper" aria-labelledby="qbo-title">
+  <section class="section section--paper qbo-sec" aria-labelledby="qbo-title">
     <div class="wrap qbo">
       <div data-reveal>
         <p class="eyebrow">The tools</p>
@@ -175,8 +176,9 @@ const style = { essentials: 'pkg--light', growth: 'pkg--tint', premium: 'pkg--da
     color: var(--tb-navy);
     box-shadow: var(--shadow-lift);
   }
-  .pkg--tint { background: var(--pkg-tint, #E1DDC7); }
-  :global(html[data-theme='dusty']) .pkg--tint { --pkg-tint: #D6DCE1; }
+  /* Growth: pale navy-blue card, with the olive used for its name instead */
+  .pkg--tint { background: #DCE3EA; }
+  .pkg--tint .pkg__name { color: var(--tb-olive); }
   .pkg--dark { background: var(--tb-cream); }
   .pkg__head { padding-bottom: 1.25rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--tb-line); }
   .pkg__kicker { margin: 0; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--tb-olive); }
