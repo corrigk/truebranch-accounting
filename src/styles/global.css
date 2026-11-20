@@ -20,7 +20,10 @@
   /* Derived tones */
   --tb-paper:  #F4F2EC; /* lighter cream for cards */
   --tb-white:  #FFFFFF; /* brightest surface (answer tiles etc.) */
-  --tb-sun:    #FBF6EA; /* warm highlight, used for "light" glows */
+  --tb-sun:    #FFFFFF; /* soft highlight, used for "light" glows */
+  --bubble:    #E3E9EF; /* icon circles */
+  --tint:      rgb(33 49 63 / 0.07);   /* faint fills (badges, chips) */
+  --tint-line: rgb(33 49 63 / 0.18);
   --tb-line:   #C9CBC8; /* mist blended into cream, for borders */
   --tb-shade:  33 49 63; /* navy as RGB channels, for shadows */
 
@@ -211,9 +214,9 @@ a:hover { text-decoration-thickness: 2px; }
 }
 .btn .arrow { transition: transform 0.35s var(--ease); }
 .btn:hover .arrow { transform: translateX(4px); }
-.btn--primary { box-shadow: 0 10px 24px -14px rgb(var(--tb-shade) / 0.8); }
+.btn--primary { --btn-bg: var(--primary-bg, var(--tb-navy)); box-shadow: 0 10px 24px -14px rgb(var(--tb-shade) / 0.8); }
 .btn--primary:hover {
-  --btn-bg: var(--tb-forest);
+  --btn-bg: var(--primary-hover, var(--tb-forest));
   transform: translateY(-2px);
   box-shadow: 0 16px 30px -14px rgb(var(--tb-shade) / 0.7);
 }
@@ -266,7 +269,7 @@ a:hover { text-decoration-thickness: 2px; }
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
-.badge--soft { background: rgb(87 82 56 / 0.12); color: var(--tb-olive); }
+.badge--soft { background: var(--tint); color: var(--tb-navy); }
 
 /* Line icons (see components/Icon.astro) */
 .icon { width: 1.5rem; height: 1.5rem; flex-shrink: 0; }
@@ -276,9 +279,9 @@ a:hover { text-decoration-thickness: 2px; }
   width: 3.25rem;
   height: 3.25rem;
   border-radius: 50%;
-  background: var(--tb-cream);
-  color: var(--tb-olive);
-  box-shadow: inset 0 1px 2px rgb(var(--tb-shade) / 0.12), 0 1px 0 rgb(255 255 255 / 0.8);
+  background: var(--bubble);
+  color: var(--tb-navy);
+  box-shadow: inset 0 1px 2px rgb(var(--tb-shade) / 0.1);
 }
 
 /* ---------- Placeholders ----------

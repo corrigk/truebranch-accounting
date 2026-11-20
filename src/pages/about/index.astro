@@ -8,20 +8,25 @@
 import Base from '../../layouts/Base.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import CtaBand from '../../components/CtaBand.astro';
+import Blend from '../../components/Blend.astro';
 import Brand from '../../components/Brand.astro';
 import Icon from '../../components/Icon.astro';
 import PhotoPlaceholder from '../../components/PhotoPlaceholder.astro';
 import { site, serviceArea } from '../../site.config';
 
+// One photo (or two: the layout adjusts). Files live in /public/assets/photos/.
 const photos: { src?: string; alt?: string; placeholderLabel: string }[] = [
-  { placeholderLabel: 'photo of Franccesca' },
-  { placeholderLabel: 'optional second photo (e.g. with her husband)' },
+  {
+    src: 'assets/photos/franccesca-2.jpg',
+    alt: 'Franccesca smiling warmly at the camera, arms crossed, in a black blazer',
+    placeholderLabel: 'photo of Franccesca',
+  },
 ];
 
 const values = [
-  { icon: 'chat', title: 'Plain language', text: 'No jargon. If a term is unavoidable, I’ll explain it.' },
-  { icon: 'heart', title: 'No judgment', text: 'Wherever your books are today is a fine place to start.' },
-  { icon: 'user', title: 'One person, start to finish', text: 'You always work with me directly.' },
+  { icon: 'chat', box: 'box--blue', title: 'Plain language', text: 'No jargon. If a term is unavoidable, I’ll explain it.' },
+  { icon: 'heart', box: 'box--white', title: 'No judgment', text: 'Wherever your books are today is a fine place to start.' },
+  { icon: 'user', box: 'band-navy', title: 'One person, start to finish', text: 'You always work with me directly.' },
 ] as const;
 ---
 <Base
@@ -32,7 +37,9 @@ const values = [
     <p class="lede draft">I help small business owners feel calm and clear about their money.</p>
   </PageIntro>
 
-  <section class="section about-sec" aria-labelledby="story-title">
+  <Blend tones={['a', 'b']} />
+
+  <section class="section tone-b about-sec" aria-labelledby="story-title">
     <div class:list={['wrap', 'about', { 'about--two': photos.length > 1 }]}>
       <div class="about__photos" data-reveal="scale">
         {photos.map((p, i) => (
@@ -70,8 +77,10 @@ const values = [
     </div>
   </section>
 
+  <Blend tones={['b', 'c', 'd']} />
+
   <!-- ============ WHAT WORKING WITH ME IS LIKE ============ -->
-  <section class="section section--paper" aria-labelledby="values-title">
+  <section class="section tone-d" aria-labelledby="values-title">
     <div class="wrap">
       <div class="section-head section-head--center" data-reveal>
         <p class="eyebrow">Working together</p>
@@ -79,7 +88,7 @@ const values = [
       </div>
       <ul class="values" role="list">
         {values.map((v, i) => (
-          <li class="card card--lift value draft" data-reveal style={`--d:${i}`}>
+          <li class={`card card--lift value ${v.box} draft`} data-reveal style={`--d:${i}`}>
             <span class="icon-bubble"><Icon name={v.icon} /></span>
             <h3>{v.title}</h3>
             <p>{v.text}</p>
@@ -89,6 +98,8 @@ const values = [
       <p class="area" data-reveal><Icon name="pin" /> {serviceArea()}</p>
     </div>
   </section>
+
+  <Blend tones={['d', 'e']} />
 
   <CtaBand heading="I’d love to hear about <em>your business</em>." text="Tell me a little about what you do and where things stand. It takes about two minutes." />
 </Base>

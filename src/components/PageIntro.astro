@@ -5,7 +5,7 @@ import LeafShadow from './LeafShadow.astro';
 interface Props { eyebrow: string; title: string; draftTitle?: boolean }
 const { eyebrow, title, draftTitle = true } = Astro.props;
 ---
-<section class="page-intro" aria-labelledby="page-title">
+<section class="page-intro tone-a" aria-labelledby="page-title">
   <div class="page-intro__light" aria-hidden="true"></div>
   <LeafShadow />
   <div class="wrap page-intro__inner">

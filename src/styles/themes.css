@@ -1,174 +1,133 @@
 /* =====================================================================
-   COLOR THEMES — from minimal to bold, all built from the brand palette.
+   THEMES AND SECTION TONES
 
-   The active theme is set on <html data-theme="…">:
-     classic  Minimal: cream, lots of white space (the original look)
-     olive    Olive Grove: warm olive tints and color boxes, forest buttons
-     dusty    Dusty Blue: cool slate and mist tints, slate buttons
-     bold     Bold & Earthy: dark forest and navy bands, strong color boxes
+   Two color themes, both built from the brand palette:
+     classic  "Minimal": airy and light, deepening to navy at the bottom
+     bold     "Bold & Earthy": richer blues, deep forest green and navy
 
-   Pick the default in site.config.ts (`theme`). While `showThemePicker`
-   is on, visitors can switch themes from the bar at the top of the page.
+   Set on <html data-theme="…">. Pick the default in site.config.ts
+   (`theme`); while `showThemePicker` is on, visitors can switch.
 
-   How dark areas work: the "band" classes below re-map the brand color
-   variables (text becomes cream, backgrounds become forest or navy), so
-   everything inside a band flips to light-on-dark automatically.
+   SECTION TONES: every page section has a tone class, running from light
+   to dark down the page:
+     tone-a  lightest   tone-b  light   tone-c  medium
+     tone-d  dark (forest in Bold, deep blue in Minimal)
+     tone-e  darkest navy (matches the footer)
+   <Blend> strips between sections fade one tone into the next, so there
+   are no hard edges.
+
+   Dark tones re-map the brand color variables (text turns cream), so
+   everything inside flips to light-on-dark automatically.
    ===================================================================== */
 
-/* ---------- Dark bands (used by the Bold theme and the Premium package) ---------- */
-.band-forest,
-.band-navy,
-html[data-theme='bold'] .section--paper,
-html[data-theme='bold'] .benefit:nth-child(1),
-html[data-theme='bold'] .benefit:nth-child(2),
-html[data-theme='bold'] .value:nth-child(2) {
-  --tb-navy:  #EAE7DF;              /* text becomes cream */
-  --tb-slate: #D2D3CC;              /* softer text, still AA on the dark bg */
-  --tb-olive: #C9C39C;              /* accents become a light olive */
+/* ---------- Tone colors per theme ---------- */
+html[data-theme='classic'] {
+  --tone-a: #F8F6F1;
+  --tone-b: #EAE7DF;
+  --tone-c: #DCE3EA;
+  --tone-d: #2B3D4D;
+  --tone-e: #21313F;
+  --theme-primary: #21313F;
+  --theme-primary-hover: #34495B;
+  --primary-bg: var(--theme-primary);
+  --primary-hover: var(--theme-primary-hover);
+}
+html[data-theme='bold'] {
+  --tone-a: #F4F2EC;
+  --tone-b: #E1E7EC;
+  --tone-c: #B8C2CC;
+  --tone-d: #383A28;
+  --tone-e: #21313F;
+  --theme-primary: #383A28;
+  --theme-primary-hover: #21313F;
+  --primary-bg: var(--theme-primary);
+  --primary-hover: var(--theme-primary-hover);
+}
+
+/* ---------- Light tones (a, b, c) ---------- */
+.tone-a, .tone-b, .tone-c {
+  --tb-paper: #FFFFFF;
+  --bubble: #E3E9EF;
+  --tint: rgb(33 49 63 / 0.07);
+  --tint-line: rgb(33 49 63 / 0.18);
+  color: var(--tb-navy);
+}
+.tone-a { background: var(--tone-a); }
+.tone-b { background: var(--tone-b); }
+.tone-c {
+  background: var(--tone-c);
+  --tb-slate: #34414D; /* a little darker so small text stays readable on this tone */
+  --tb-olive: #4A4630;
+}
+
+/* ---------- Dark tones (d, e), and the dark box styles ---------- */
+.tone-d, .tone-e,
+.band-forest, .band-navy, .box--navy, .box--forest {
+  --tb-navy:  #EAE7DF;   /* text turns cream */
+  --tb-slate: #D4D8DB;
+  --tb-olive: #C3CDD6;   /* accents turn pale blue-grey */
   --tb-mist:  #9CA5B0;
   --tb-line:  rgb(234 231 223 / 0.2);
   --tb-sun:   rgb(255 255 255 / 0.05);
   --tb-shade: 0 0 0;
-  background: var(--tb-cream);      /* the band color, set below */
+  --bubble:   rgb(234 231 223 / 0.12);
+  --tint:     rgb(234 231 223 / 0.1);
+  --tint-line: rgb(234 231 223 / 0.25);
+  --primary-bg: #EAE7DF;
+  --primary-hover: #FFFFFF;
   color: var(--tb-navy);
 }
-.band-forest,
-html[data-theme='bold'] .section--paper,
-html[data-theme='bold'] .benefit:nth-child(2) {
-  --tb-cream:  #383A28;
-  --tb-paper:  #44462F;
-  --tb-white:  #4E5039;
-  --tb-forest: #21313F;
-}
-.band-navy,
-html[data-theme='bold'] .section--paper:nth-of-type(even),
-html[data-theme='bold'] .qbo-sec, /* keeps it from merging with the green packages band above */
-html[data-theme='bold'] .benefit:nth-child(1),
-html[data-theme='bold'] .value:nth-child(2) {
-  --tb-cream:  #21313F;
-  --tb-paper:  #2B3D4D;
-  --tb-white:  #344859;
-  --tb-forest: #383A28;
-}
-:is(.band-forest, .band-navy, html[data-theme='bold'] .section--paper) .press { text-shadow: none; }
+.tone-d { background: var(--tone-d); --tb-cream: var(--tone-d); }
+.tone-e { background: var(--tone-e); --tb-cream: var(--tone-e); }
+html[data-theme='classic'] .tone-d { --tb-paper: #34495B; --tb-white: #3C5266; --tb-forest: #21313F; }
+html[data-theme='bold']    .tone-d { --tb-paper: #45472F; --tb-white: #4F513A; --tb-forest: #21313F; }
+.tone-e { --tb-paper: #2D4151; --tb-white: #354B5C; --tb-forest: #383A28; }
 
-/* A light card placed inside a dark band: restores the normal palette so
-   its text is dark again. */
-.band-light {
+.band-forest, .box--forest { background: #383A28; --tb-cream: #383A28; --tb-paper: #45472F; --tb-white: #4F513A; --tb-forest: #21313F; }
+.band-navy,   .box--navy   { background: #21313F; --tb-cream: #21313F; --tb-paper: #2D4151; --tb-white: #354B5C; --tb-forest: #383A28; }
+
+/* ---------- Light boxes (also restore the normal palette inside a dark tone) ---------- */
+.band-light, .box--blue, .box--white {
   --tb-navy:   #21313F;
-  --tb-slate:  #4A5561;
+  --tb-slate:  #46525E;
   --tb-forest: #383A28;
   --tb-cream:  #EAE7DF;
   --tb-olive:  #575238;
   --tb-mist:   #9CA5B0;
-  --tb-paper:  #F4F2EC;
+  --tb-paper:  #F6F8FA;
   --tb-white:  #FFFFFF;
   --tb-line:   #C9CBC8;
-  --tb-sun:    #FBF6EA;
+  --tb-sun:    #FFFFFF;
   --tb-shade:  33 49 63;
+  --bubble:    #E3E9EF;
+  --tint:      rgb(33 49 63 / 0.07);
+  --tint-line: rgb(33 49 63 / 0.18);
+  --primary-bg: var(--theme-primary);
+  --primary-hover: var(--theme-primary-hover);
   color: var(--tb-navy);
 }
-/* Small section labels inside dark bands stay light, whatever a theme sets elsewhere. */
-html[data-theme] :is(.band-forest, .band-navy) .eyebrow { color: var(--tb-olive); }
+.box--blue  { background: #DCE3EA; }
+.box--white { background: #FFFFFF; }
 
-/* Light blue (a pale tint of the brand navy), used instead of a yellow tint */
-.tint-blue { background: #DCE3EA !important; }
+/* Box surfaces (used by the benefit, value and package cards) */
+.box { border-radius: var(--radius-lg); padding: clamp(1.6rem, 3vw, 2.25rem); box-shadow: var(--shadow-soft); }
+.box p { color: var(--tb-slate); }
 
-/* Tinted backgrounds are a little darker than cream, so secondary text uses a
-   deeper slate there to keep WCAG AA contrast (4.5:1). */
-html:is([data-theme='olive'], [data-theme='dusty'], [data-theme='bold']) { --tb-slate: #4A5561; }
-.pkg--tint, .service--growth { --tb-slate: #4A5561; }
+/* Soft headline shadow only makes sense on light backgrounds */
+:is(.tone-d, .tone-e, .band-forest, .band-navy, .box--navy, .box--forest) .press { text-shadow: none; }
 
-/* Buttons on dark panels (closing call-to-action, footer) always stay light,
-   whatever button color a theme uses elsewhere. */
-html[data-theme] .on-dark .btn--primary { --btn-bg: var(--tb-cream); --btn-fg: var(--tb-navy); }
-html[data-theme] .on-dark .btn--primary:hover { --btn-bg: #fff; }
+/* Section labels on dark tones stay light, whatever else changes */
+:is(.tone-d, .tone-e) .eyebrow { color: #B7C1CC; }
 
+/* Buttons: primary buttons use the theme color on light areas and flip to
+   light-on-dark inside dark tones (see --primary-bg below). */
 
-/* ---------- Shared "color box" treatment for the non-minimal themes ---------- */
-html:is([data-theme='olive'], [data-theme='dusty'], [data-theme='bold']) .benefit,
-html:is([data-theme='olive'], [data-theme='dusty'], [data-theme='bold']) .value {
-  padding: clamp(1.6rem, 3vw, 2.25rem);
-  border-radius: var(--radius-lg);
-  background: var(--box-1);
-  border: 0;
-  box-shadow: var(--shadow-soft);
-}
-html:is([data-theme='olive'], [data-theme='dusty']) .benefit:nth-child(2),
-html:is([data-theme='olive'], [data-theme='dusty']) .value:nth-child(2) { background: var(--box-2); }
-html:is([data-theme='olive'], [data-theme='dusty']) .benefit:nth-child(3),
-html:is([data-theme='olive'], [data-theme='dusty']) .value:nth-child(3) { background: var(--box-3); }
-html:is([data-theme='olive'], [data-theme='dusty'], [data-theme='bold']) .benefit p,
-html:is([data-theme='olive'], [data-theme='dusty'], [data-theme='bold']) .value p { color: var(--tb-slate); }
+/* ---------- Blend strips between sections ---------- */
+.blend { height: clamp(4rem, 9vw, 7.5rem); pointer-events: none; }
 
-/* =====================================================================
-   OLIVE GROVE
-   ===================================================================== */
-html[data-theme='olive'] {
-  --tb-paper: #FBFAF5;
-  --box-1: #DEDAC2;
-  --box-2: #D5DADC;
-  --box-3: #EAE1CF;
-}
-html[data-theme='olive'] .section--paper { background: #E3DFC9; }
-html[data-theme='olive'] .btn--primary { --btn-bg: var(--tb-forest); }
-html[data-theme='olive'] .btn--primary:hover { --btn-bg: var(--tb-olive); }
-html[data-theme='olive'] .icon-bubble { background: var(--tb-olive); color: var(--tb-cream); box-shadow: none; }
-html[data-theme='olive'] .ribbon { background: var(--tb-forest); }
-html[data-theme='olive'] .eyebrow { color: var(--tb-forest); }
-html[data-theme='olive'] .card--lift { border-top: 4px solid var(--tb-olive); }
-html[data-theme='olive'] .hero__light,
-html[data-theme='olive'] .page-intro__light {
-  background:
-    radial-gradient(70rem 36rem at 88% 8%, #FBF3DC, transparent 62%),
-    radial-gradient(40rem 26rem at 5% 95%, rgb(87 82 56 / 0.18), transparent 70%);
-}
-
-/* =====================================================================
-   DUSTY BLUE
-   ===================================================================== */
-html[data-theme='dusty'] {
-  --tb-paper: #FAFAF8;
-  --box-1: #D6DCE1;
-  --box-2: #E4E0D4;
-  --box-3: #CFD5DB;
-}
-html[data-theme='dusty'] .section--paper { background: #D9DEE2; }
-html[data-theme='dusty'] .btn--primary { --btn-bg: var(--tb-slate); }
-html[data-theme='dusty'] .btn--primary:hover { --btn-bg: var(--tb-navy); }
-html[data-theme='dusty'] .icon-bubble { background: var(--tb-slate); color: var(--tb-cream); box-shadow: none; }
-html[data-theme='dusty'] .ribbon { background: var(--tb-slate); }
-html[data-theme='dusty'] .eyebrow { color: var(--tb-slate); }
-html[data-theme='dusty'] h1 em,
-html[data-theme='dusty'] h2 em { color: var(--tb-slate); }
-html[data-theme='dusty'] .card--lift { border-top: 4px solid var(--tb-mist); }
-html[data-theme='dusty'] .cta-band__panel { background: var(--tb-navy); }
-html[data-theme='dusty'] .hero__light,
-html[data-theme='dusty'] .page-intro__light {
-  background:
-    radial-gradient(70rem 36rem at 88% 8%, #F3F4F2, transparent 62%),
-    radial-gradient(40rem 26rem at 5% 95%, rgb(88 101 114 / 0.22), transparent 70%);
-}
-
-/* =====================================================================
-   BOLD & EARTHY
-   ===================================================================== */
-html[data-theme='bold'] {
-  --box-1: var(--tb-cream);
-}
-html[data-theme='bold'] .ribbon { background: var(--tb-olive); }
-html[data-theme='bold'] .cta-band__panel { background: var(--tb-olive); }
-html[data-theme='bold'] .btn--primary { --btn-bg: var(--tb-forest); }
-html[data-theme='bold'] .icon-bubble { background: var(--tb-olive); color: var(--tb-cream); box-shadow: none; }
-html[data-theme='bold'] .benefit:nth-child(3) { background: #DCD8C2; }
-/* About-page values sit inside a dark band: keep them on band surfaces. */
-html[data-theme='bold'] .value:nth-child(1),
-html[data-theme='bold'] .value:nth-child(3) { background: var(--tb-paper); }
-/* Self-check counter, when its panel flips to cream inside a band */
-html[data-theme='bold'] .section--paper .check__count { color: #4A5561; }
-html[data-theme='bold'] .card--lift { border-top: 5px solid var(--tb-olive); }
-html[data-theme='bold'] .hero__light {
-  background:
-    radial-gradient(70rem 36rem at 88% 8%, #FBF1D6, transparent 60%),
-    radial-gradient(50rem 30rem at 0% 100%, rgb(56 58 40 / 0.22), transparent 70%);
-}
+/* ---------- Per-theme personality ---------- */
+html[data-theme='classic'] .ribbon { background: #21313F; }
+html[data-theme='bold'] .ribbon { background: #383A28; }
+html[data-theme='bold'] .card--lift { border-top: 4px solid var(--tb-olive); }
+html[data-theme='bold'] h1 em, html[data-theme='bold'] h2 em { font-weight: 400; }
+html[data-theme='bold'] .eyebrow { font-weight: 700; }

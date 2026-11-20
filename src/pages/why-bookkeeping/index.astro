@@ -5,6 +5,7 @@
 import Base from '../../layouts/Base.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import CtaBand from '../../components/CtaBand.astro';
+import Blend from '../../components/Blend.astro';
 import SelfCheck from '../../components/SelfCheck.astro';
 import Brand from '../../components/Brand.astro';
 import Icon from '../../components/Icon.astro';
@@ -92,7 +93,7 @@ const faqs = [
   </PageIntro>
 
   <!-- ============ WHAT IS BOOKKEEPING ============ -->
-  <section class="section" aria-labelledby="what-title">
+  <section class="section tone-a" aria-labelledby="what-title">
     <div class="wrap what">
       <div>
         <p class="eyebrow" data-reveal>The simple version</p>
@@ -133,20 +134,10 @@ const faqs = [
     </div>
   </section>
 
-  <!-- ============ SELF-CHECK ============ -->
-  <section class="section section--paper" aria-labelledby="check-title">
-    <div class="wrap">
-      <div class="section-head" data-reveal>
-        <p class="eyebrow">A 30-second check</p>
-        <h2 id="check-title" class="press">Does any of this sound <em>like you</em>?</h2>
-        <p class="lede">Tick whatever feels familiar. Nobody sees your answers but you.</p>
-      </div>
-      <div data-reveal style="--d:1"><SelfCheck /></div>
-    </div>
-  </section>
+  <Blend tones={['a', 'b']} />
 
   <!-- ============ WITHOUT vs WITH ============ -->
-  <section class="section" aria-labelledby="compare-title">
+  <section class="section tone-b" aria-labelledby="compare-title">
     <div class="wrap">
       <div class="section-head section-head--center" data-reveal>
         <p class="eyebrow">The difference it makes</p>
@@ -169,8 +160,24 @@ const faqs = [
     </div>
   </section>
 
+  <Blend tones={['b', 'c']} />
+
+  <!-- ============ SELF-CHECK ============ -->
+  <section class="section tone-c" aria-labelledby="check-title">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">A 30-second check</p>
+        <h2 id="check-title" class="press">Does any of this sound <em>like you</em>?</h2>
+        <p class="lede">Tick whatever feels familiar. Nobody sees your answers but you.</p>
+      </div>
+      <div data-reveal style="--d:1"><SelfCheck /></div>
+    </div>
+  </section>
+
+  <Blend tones={['c', 'd']} />
+
   <!-- ============ SCENARIOS ============ -->
-  <section class="section section--paper" aria-labelledby="scenarios-title">
+  <section class="section tone-d" aria-labelledby="scenarios-title">
     <div class="wrap">
       <div class="section-head" data-reveal>
         <p class="eyebrow">Sound familiar?</p>
@@ -192,7 +199,7 @@ const faqs = [
   </section>
 
   <!-- ============ FAQ ============ -->
-  <section class="section" aria-labelledby="faq-title">
+  <section class="section tone-d" aria-labelledby="faq-title">
     <div class="wrap faq">
       <div data-reveal>
         <p class="eyebrow">Questions</p>
@@ -209,6 +216,8 @@ const faqs = [
       </div>
     </div>
   </section>
+
+  <Blend tones={['d', 'e']} />
 
   <CtaBand heading="Ready to take money worries <em>off your plate</em>?" />
 </Base>
@@ -289,7 +298,7 @@ const faqs = [
     gap: 0.45rem;
     padding: 0.55rem 1rem;
     border-radius: 999px;
-    border: 1px solid rgb(87 82 56 / 0.35);
+    border: 1px solid var(--tint-line);
     color: var(--tb-olive);
     font-weight: 600;
     font-size: 0.92rem;

@@ -1,0 +1,11 @@
+---
+/* A soft gradient strip between two page sections, so one tone fades into
+   the next instead of meeting at a hard edge.
+   Pass the tones to pass through, light to dark, e.g.
+   <Blend tones={['a', 'b']} />  or  <Blend tones={['b', 'c', 'd']} />
+   (tones are defined in styles/themes.css). */
+interface Props { tones: string[] }
+const { tones } = Astro.props;
+const stops = tones.map((t) => `var(--tone-${t})`).join(', ');
+---
+<div class="blend" aria-hidden="true" style={`background: linear-gradient(to bottom, ${stops})`}></div>

@@ -135,7 +135,8 @@ const pageCode = pages[key] ?? pages[key + '/'] ?? 'E';
       const header = document.querySelector('.site-header');
       const footer = document.querySelector('.site-footer');
       if (header) collect(header, 'N');
-      document.querySelectorAll('main > *').forEach((section, i) => collect(section, `${page}${i + 1}`));
+      // Blend strips between sections are decoration, so they don't take a number.
+      [...document.querySelectorAll('main > *:not(.blend)')].forEach((section, i) => collect(section, `${page}${i + 1}`));
       if (footer) collect(footer, 'F');
       items.forEach((it) => layer.appendChild(it.tag));
       place();

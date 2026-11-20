@@ -48,9 +48,13 @@ The quote form links can pre-fill answers, e.g. `get-a-quote/?stress=taxes,mixin
 
 All motion respects the visitor's reduced-motion setting, and every interactive piece still works without JavaScript.
 
-### Color themes (review tool)
+### Color themes and the light-to-dark flow
 
-While `showThemePicker: true`, a bar at the top of every page switches between four themes built from the brand palette: **Minimal** (classic), **Olive Grove**, **Dusty Blue** and **Bold & Earthy**. Links can open in a theme with `?theme=bold` (or `classic`, `olive`, `dusty`). Once Franccesca picks one, set `theme` in `src/site.config.ts` and `showThemePicker: false`. Themes live in `src/styles/themes.css`.
+Two themes, both built from the brand palette: **Minimal** (`classic`) and **Bold & Earthy** (`bold`). While `showThemePicker: true`, a bar at the top of every page switches between them. Links can open in one with `?theme=bold` or `?theme=classic`. Once Franccesca picks, set `theme` in `src/site.config.ts` and `showThemePicker: false`.
+
+Every page section has a **tone** class from `tone-a` (lightest) to `tone-e` (darkest navy, same as the footer), and thin `<Blend tones={['b','c','d']} />` strips between sections fade one tone into the next, so each page deepens from light to dark. Tones, boxes (`box--blue`, `box--white`, `band-navy`, …) and the dark-section color flip are all in `src/styles/themes.css`. When adding a section, give it a tone and put a Blend between it and its neighbor.
+
+Her photos are in `public/assets/photos/` (used on Home and About).
 
 ## Booking and client portal (placeholders in place)
 

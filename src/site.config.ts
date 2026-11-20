@@ -58,9 +58,9 @@ export const site = {
   // is a work in progress. Set to false when you launch.
   previewMode: true,
 
-  // COLOR THEME: 'classic' (minimal) | 'olive' | 'dusty' | 'bold'.
+  // COLOR THEME: 'classic' (Minimal) or 'bold' (Bold & Earthy).
   // See src/styles/themes.css for what each one looks like.
-  theme: 'classic' as 'classic' | 'olive' | 'dusty' | 'bold',
+  theme: 'classic' as 'classic' | 'bold',
 
   // REVIEW TOOL: shows a bar at the top of every page for switching color
   // themes, so Franccesca can compare them. Set to false once one is chosen.
