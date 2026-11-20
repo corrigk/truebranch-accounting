@@ -8,7 +8,6 @@
 import Base from '../../layouts/Base.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import CtaBand from '../../components/CtaBand.astro';
-import Blend from '../../components/Blend.astro';
 import Brand from '../../components/Brand.astro';
 import Icon from '../../components/Icon.astro';
 import PhotoPlaceholder from '../../components/PhotoPlaceholder.astro';
@@ -36,8 +35,6 @@ const values = [
   <PageIntro eyebrow="About" title={`Hi, I’m <em>${site.ownerFirstName}</em>.`} draftTitle={false}>
     <p class="lede draft">I help small business owners feel calm and clear about their money.</p>
   </PageIntro>
-
-  <Blend tones={['a', 'b']} />
 
   <section class="section tone-b about-sec" aria-labelledby="story-title">
     <div class:list={['wrap', 'about', { 'about--two': photos.length > 1 }]}>
@@ -77,8 +74,6 @@ const values = [
     </div>
   </section>
 
-  <Blend tones={['b', 'c', 'd']} />
-
   <!-- ============ WHAT WORKING WITH ME IS LIKE ============ -->
   <section class="section tone-d" aria-labelledby="values-title">
     <div class="wrap">
@@ -98,8 +93,6 @@ const values = [
       <p class="area" data-reveal><Icon name="pin" /> {serviceArea()}</p>
     </div>
   </section>
-
-  <Blend tones={['d', 'e']} />
 
   <CtaBand heading="I’d love to hear about <em>your business</em>." text="Tell me a little about what you do and where things stand. It takes about two minutes." />
 </Base>

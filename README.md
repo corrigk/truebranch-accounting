@@ -52,7 +52,7 @@ All motion respects the visitor's reduced-motion setting, and every interactive 
 
 Two themes, both built from the brand palette: **Minimal** (`classic`) and **Bold & Earthy** (`bold`). While `showThemePicker: true`, a bar at the top of every page switches between them. Links can open in one with `?theme=bold` or `?theme=classic`. Once Franccesca picks, set `theme` in `src/site.config.ts` and `showThemePicker: false`.
 
-Every page section has a **tone** class from `tone-a` (lightest) to `tone-e` (darkest navy, same as the footer), and thin `<Blend tones={['b','c','d']} />` strips between sections fade one tone into the next, so each page deepens from light to dark. Tones, boxes (`box--blue`, `box--white`, `band-navy`, …) and the dark-section color flip are all in `src/styles/themes.css`. When adding a section, give it a tone and put a Blend between it and its neighbor.
+Every page section has a **tone** class from `tone-a` (lightest) to `tone-e` (darkest navy, same as the footer), so each page deepens from light to dark, with clean hard edges between sections. Tones, boxes (`box--blue`, `box--white`, `band-navy`, …) and the dark-section color flip are all in `src/styles/themes.css`. When adding a section, give it a tone class.
 
 Her photos are in `public/assets/photos/` (used on Home and About).
 

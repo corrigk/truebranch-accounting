@@ -5,7 +5,6 @@
 import Base from '../../layouts/Base.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import CtaBand from '../../components/CtaBand.astro';
-import Blend from '../../components/Blend.astro';
 import SelfCheck from '../../components/SelfCheck.astro';
 import Brand from '../../components/Brand.astro';
 import Icon from '../../components/Icon.astro';
@@ -134,8 +133,6 @@ const faqs = [
     </div>
   </section>
 
-  <Blend tones={['a', 'b']} />
-
   <!-- ============ WITHOUT vs WITH ============ -->
   <section class="section tone-b" aria-labelledby="compare-title">
     <div class="wrap">
@@ -160,8 +157,6 @@ const faqs = [
     </div>
   </section>
 
-  <Blend tones={['b', 'c']} />
-
   <!-- ============ SELF-CHECK ============ -->
   <section class="section tone-c" aria-labelledby="check-title">
     <div class="wrap">
@@ -173,8 +168,6 @@ const faqs = [
       <div data-reveal style="--d:1"><SelfCheck /></div>
     </div>
   </section>
-
-  <Blend tones={['c', 'd']} />
 
   <!-- ============ SCENARIOS ============ -->
   <section class="section tone-d" aria-labelledby="scenarios-title">
@@ -216,8 +209,6 @@ const faqs = [
       </div>
     </div>
   </section>
-
-  <Blend tones={['d', 'e']} />
 
   <CtaBand heading="Ready to take money worries <em>off your plate</em>?" />
 </Base>

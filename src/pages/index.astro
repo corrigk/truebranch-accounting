@@ -12,12 +12,11 @@ import ShoeboxSort from '../components/ShoeboxSort.astro';
 import Testimonials from '../components/Testimonials.astro';
 import PhotoPlaceholder from '../components/PhotoPlaceholder.astro';
 import CtaBand from '../components/CtaBand.astro';
-import Blend from '../components/Blend.astro';
 import { site, url, quoteHref, serviceArea } from '../site.config';
 import { packages } from '../data/packages';
 
 const pkgIcons = { essentials: 'receipt', growth: 'trend', premium: 'chart' } as const;
-const boxOf = { essentials: 'box--white', growth: 'box--blue', premium: 'band-navy' } as const;
+const boxOf = { essentials: 'box--white', growth: 'box--white', premium: 'box--white' } as const;
 
 // The gently scrolling ribbon under the hero.
 const ribbon = ['Less stress', 'More clarity', 'Calmer tax time', 'Know where you stand', 'Books you understand', 'Time back for your business'];
@@ -110,8 +109,6 @@ const benefits = [
     </ul>
   </section>
 
-  <Blend tones={['a', 'b']} />
-
   <!-- ============ TESTIMONIALS (hidden automatically if none are real) ============ -->
   <Testimonials />
 
@@ -144,8 +141,6 @@ const benefits = [
       </div>
     </div>
   </section>
-
-  <Blend tones={['b', 'c', 'd']} />
 
   <!-- ============ SERVICES OVERVIEW ============ -->
   <!-- Dark section: Essentials white, Growth pale blue, Premium navy -->
@@ -189,8 +184,6 @@ const benefits = [
       </div>
     </div>
   </section>
-
-  <Blend tones={['d', 'e']} />
 
   <CtaBand />
 </Base>
@@ -311,7 +304,6 @@ const benefits = [
   .service__list li { display: flex; gap: 0.55rem; align-items: center; }
   .service__list :global(.icon) { width: 1.15rem; height: 1.15rem; color: var(--tb-olive); stroke-width: 2.2; }
   .service .text-link { margin-top: auto; color: var(--tb-navy); }
-  .service--growth h3 { color: var(--tb-olive); }
   @media (min-width: 60rem) {
     .service { display: grid; grid-row: span 6; grid-template-rows: subgrid; justify-items: start; align-content: start; }
     .service .text-link { align-self: end; }

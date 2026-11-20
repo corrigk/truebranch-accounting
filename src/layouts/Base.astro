@@ -9,7 +9,6 @@ import '@fontsource-variable/source-sans-3/wght.css';
 import '../styles/global.css';
 import '../styles/themes.css';
 import ThemePicker from '../components/ThemePicker.astro';
-import Blend from '../components/Blend.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import EditLabels from '../components/EditLabels.astro';
@@ -19,9 +18,8 @@ interface Props {
   title: string;        // page title, shown in the browser tab and search results
   description: string;  // 1–2 sentence summary for search results and link previews
   noindex?: boolean;    // true to keep a page out of search results
-  endTone?: string;     // tone of the page's last section; the footer fades in from it ('e' = already navy)
 }
-const { title, description, noindex: pageNoindex = false, endTone = 'e' } = Astro.props;
+const { title, description, noindex: pageNoindex = false } = Astro.props;
 const noindex = pageNoindex || site.previewMode;
 const fullTitle = title === site.name ? `${site.name} | Bookkeeping for small businesses` : `${title} | ${site.name}`;
 const path = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
@@ -106,7 +104,6 @@ const localBusiness = site.city
     <main id="main">
       <slot />
     </main>
-    {endTone !== 'e' && <Blend tones={[endTone, 'e']} />}
     <Footer />
     {site.showEditToggle && <EditLabels />}
 

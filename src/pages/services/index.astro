@@ -5,7 +5,6 @@
 import Base from '../../layouts/Base.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import CtaBand from '../../components/CtaBand.astro';
-import Blend from '../../components/Blend.astro';
 import Brand from '../../components/Brand.astro';
 import Icon from '../../components/Icon.astro';
 import { packages, addOns } from '../../data/packages';
@@ -19,8 +18,8 @@ const steps = [
   { icon: 'calendar', title: 'Your books, every month', text: '[PLACEHOLDER: e.g. what happens each month and when you hear from her.]' },
 ] as const;
 
-// Cards sit on a dark section: Essentials white, Growth pale blue, Premium navy.
-const style = { essentials: 'pkg--light box--white', growth: 'pkg--tint box--blue', premium: 'pkg--dark band-navy' };
+// All three package cards share the same white look on the dark section.
+const style = { essentials: 'pkg--light box--white', growth: 'pkg--light box--white', premium: 'pkg--light box--white' };
 ---
 <Base
   title="Services"
@@ -30,8 +29,6 @@ const style = { essentials: 'pkg--light box--white', growth: 'pkg--tint box--blu
     <p class="lede draft">Three monthly packages, built around how many accounts and transactions you have. Tax help is on the way.</p>
     <p class="qbo-pill"><Icon name="shield" /> {site.certification} · Books kept in QuickBooks Online</p>
   </PageIntro>
-
-  <Blend tones={['a', 'b']} />
 
   <!-- Light to dark down the page: intro, tools, steps, then the packages -->
   <!-- ============ QUICKBOOKS ONLINE ============ -->
@@ -58,7 +55,7 @@ const style = { essentials: 'pkg--light box--white', growth: 'pkg--tint box--blu
   </section>
 
   <!-- ============ HOW IT WORKS ============ -->
-  <section class="section tone-b" aria-labelledby="how-title">
+  <section class="section tone-e" aria-labelledby="how-title">
     <div class="wrap">
       <div class="section-head" data-reveal>
         <p class="eyebrow">How it works</p>
@@ -76,8 +73,6 @@ const style = { essentials: 'pkg--light box--white', growth: 'pkg--tint box--blu
       </ol>
     </div>
   </section>
-
-  <Blend tones={['b', 'c', 'd']} />
 
   <!-- ============ PACKAGES ============ -->
   <section class="section tone-d pkgs-sec" aria-labelledby="packages-title">
@@ -140,8 +135,6 @@ const style = { essentials: 'pkg--light box--white', growth: 'pkg--tint box--blu
       </article>
     </div>
   </section>
-
-  <Blend tones={['d', 'e']} />
 
   <CtaBand />
 </Base>
@@ -280,9 +273,9 @@ const style = { essentials: 'pkg--light box--white', growth: 'pkg--tint box--blu
     width: 3.5rem;
     height: 3.5rem;
     border-radius: 50%;
-    background: var(--tb-cream);
-    color: var(--tb-olive);
-    box-shadow: 0 0 0 6px var(--tb-cream), var(--shadow-soft);
+    background: var(--tb-navy);   /* light circle on the dark section */
+    color: var(--tb-cream);
+    box-shadow: 0 0 0 6px var(--tb-cream);
     transition: transform 0.6s var(--ease), background-color 0.6s, color 0.6s;
     transition-delay: calc(0.3s + var(--i) * 0.25s);
   }

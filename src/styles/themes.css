@@ -13,8 +13,7 @@
      tone-a  lightest   tone-b  light   tone-c  medium
      tone-d  dark (forest in Bold, deep blue in Minimal)
      tone-e  darkest navy (matches the footer)
-   <Blend> strips between sections fade one tone into the next, so there
-   are no hard edges.
+   Sections meet at clean, hard edges.
 
    Dark tones re-map the brand color variables (text turns cream), so
    everything inside flips to light-on-dark automatically.
@@ -121,9 +120,6 @@ html[data-theme='bold']    .tone-d { --tb-paper: #45472F; --tb-white: #4F513A; -
 
 /* Buttons: primary buttons use the theme color on light areas and flip to
    light-on-dark inside dark tones (see --primary-bg below). */
-
-/* ---------- Blend strips between sections ---------- */
-.blend { height: clamp(4rem, 9vw, 7.5rem); pointer-events: none; }
 
 /* ---------- Per-theme personality ---------- */
 html[data-theme='classic'] .ribbon { background: #21313F; }

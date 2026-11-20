@@ -16,7 +16,6 @@ import PageIntro from '../../components/PageIntro.astro';
 import Brand from '../../components/Brand.astro';
 import Icon from '../../components/Icon.astro';
 import BookingCard from '../../components/BookingCard.astro';
-import Blend from '../../components/Blend.astro';
 import { site, url } from '../../site.config';
 
 const businessTypes = [
@@ -73,7 +72,7 @@ const thanksUrl = Astro.site ? new URL(url('get-a-quote/thanks/'), Astro.site).h
 <Base
   title="Get a quote"
   description="Answer a few quick questions about your business and get a bookkeeping quote. It takes about two minutes."
-  endTone="b"
+ 
 >
   <PageIntro eyebrow="Get a quote" title="Let’s see how I can <em>help</em>.">
     <p class="lede draft">
@@ -81,8 +80,6 @@ const thanksUrl = Astro.site ? new URL(url('get-a-quote/thanks/'), Astro.site).h
       no wrong answers.
     </p>
   </PageIntro>
-
-  <Blend tones={['a', 'b']} />
 
   <section class="section tone-b quote-sec">
     <div class="wrap quote">
